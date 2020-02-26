@@ -4,6 +4,4 @@
   "description": "The web based user interface written in React for Taskle project",
   "main": "index.js",
   "repository": "https://github.com/darnley/taskle_react-ui.git",
-  "author": "Darnley Costa <darnleysilva@gmail.com>",
-  "license": "MIT"
 }
