@@ -3,5 +3,5 @@
   "version": "1.0.0",
   "description": "The web based user interface written in React for Taskle project",
   "main": "index.js",
-  "repository": "https://github.com/darnley/taskle_react-ui.git",
+  "repository": "https://github.com/darnley/taskle_react-ui.git"
 }
