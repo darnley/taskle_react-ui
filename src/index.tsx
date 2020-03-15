@@ -7,11 +7,13 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Login from './components/authentication/SignIn';
 import PrivateRoute from './components/authentication/PrivateRoute';
 import routeConfig from './routes.config';
+import SignOut from './components/authentication/SignOut';
 
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
       <PrivateRoute path="/" exact={true} component={App} />
+      <PrivateRoute path={routeConfig.signOut} component={SignOut} />
       <Route path={routeConfig.signIn} exact={true} component={Login} />
     </Switch>
   </BrowserRouter>,
