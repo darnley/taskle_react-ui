@@ -7,6 +7,8 @@ const signOutUnauthorizedInterceptor = (err: AxiosError) => {
     authentication.signOut();
     window.location.href = routeConfig.signIn;
   }
+
+  return Promise.reject(err);
 };
 
 export default signOutUnauthorizedInterceptor;
