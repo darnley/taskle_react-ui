@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import authenticatedAxios from './services/authenticatedAxios';
+import 'typeface-roboto';
+import './App.scss';
 import HelmetConfig from './components/helmet/HelmetConfig';
+import logo from './logo.svg';
+import authenticatedAxios from './services/authenticatedAxios';
 
 interface IAppProps {}
 

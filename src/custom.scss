@@ -1,0 +1,9 @@
+/* make the customizations */
+$theme-colors: ();
+
+$body-bg: #fbfbfb;
+$font-size-base: 0.8rem;
+$font-family-base: 'Roboto', sans-serif;
+
+/* import bootstrap to set changes */
+@import '~bootstrap/scss/bootstrap';
