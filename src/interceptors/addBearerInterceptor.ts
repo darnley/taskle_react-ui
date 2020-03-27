@@ -1,6 +1,10 @@
 import authentication from '../utils/authentication';
 import { AxiosRequestConfig } from 'axios';
 
+/**
+ * Interceptor to add the Bearer token.
+ * @param config The Axios configuration.
+ */
 const addBearerInterceptor = async (config: AxiosRequestConfig) => {
   let { token } = authentication;
 
