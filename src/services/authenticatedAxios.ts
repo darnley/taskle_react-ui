@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import addBearerInterceptor from '../interceptors/addBearerInterceptor';
 import signOutUnauthorizedInterceptor from '../interceptors/signOutOnUnauthorizedInterceptor';
 
@@ -9,7 +9,7 @@ import signOutUnauthorizedInterceptor from '../interceptors/signOutOnUnauthorize
  *
  * @instance
  */
-const authenticatedAxios = axios.create({
+const authenticatedAxios: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   timeout: 5000,
 });
