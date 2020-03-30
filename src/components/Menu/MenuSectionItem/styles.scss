@@ -1,0 +1,63 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins/_breakpoints';
+
+$link-color: #656565;
+
+span {
+  color: $link-color;
+}
+
+.menu-section-item-text,
+.menu-section-item-number {
+  position: absolute;
+}
+
+.menu-section-item-text {
+  left: 5em;
+  margin-right: 1em;
+  white-space: nowrap;
+}
+
+.menu-section-item-number {
+  right: 1.2em;
+  color: #c4c4c4;
+}
+
+.nav-link {
+  padding: 0.5rem 0;
+}
+
+@include media-breakpoint-between(xs, lg) {
+  .menu-section-item-text {
+    left: 3em;
+  }
+}
+
+@include media-breakpoint-between(xs, md) {
+  .menu-section-item-number {
+    display: none;
+  }
+}
+
+@include media-breakpoint-between(xs, sm) {
+  .menu-section-item-text {
+    font-size: 8pt;
+    left: 3.5em;
+  }
+}
+
+@include media-breakpoint-between(xs, xs) {
+  .menu-section-item-text {
+    display: none;
+  }
+
+  .menu-section-item-icon {
+    font-size: 18pt;
+    margin-right: 0 !important;
+  }
+
+  .nav-link {
+    text-align: center;
+  }
+}

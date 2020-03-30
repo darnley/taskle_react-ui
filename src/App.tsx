@@ -1,38 +1,34 @@
-import React, { Component } from 'react';
+import React, { Component, SFC } from 'react';
 import 'typeface-roboto';
 import './App.scss';
 import HelmetConfig from './components/helmet/HelmetConfig';
 import logo from './logo.svg';
 import authenticatedAxios from './services/authenticatedAxios';
+import { Container, Col, Row } from 'react-bootstrap';
+import Menu from './components/Menu';
 
 interface IAppProps {}
 
-interface IAppState {}
+const App: SFC<IAppProps> = props => {
+  return (
+    <>
+      <HelmetConfig title="Início" />
 
-export default class App extends Component<IAppProps, IAppState> {
-  componentDidMount() {
-    authenticatedAxios.post('/auth/verify');
-  }
+      <Container fluid id="main-container" className="h-100">
+        <Row className="h-100">
+          <Col xs={2} id="menu-section">
+            <Menu />
+          </Col>
+          <Col xs={6} id="main-section">
+            eae
+          </Col>
+          <Col xs={4} id="right-bar-section">
+            eae
+          </Col>
+        </Row>
+      </Container>
+    </>
+  );
+};
 
-  render() {
-    return (
-      <div className="App">
-        <HelmetConfig title="Início" />
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+export default App;
