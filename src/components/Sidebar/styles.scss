@@ -1,0 +1,21 @@
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+#right-sidebar {
+  background-color: white;
+  border-left: #f1f1f1 solid 1px;
+  box-shadow: #f1f1f1 -7px -5px 20px 0px;
+
+  /* This section calls the slideInFromLeft animation we defined above */
+  animation-duration: 0.4s; /* the duration of the animation */
+  animation-timing-function: ease-out; /* how the animation will behave */
+  animation-delay: 0s; /* how long to delay the animation from starting */
+  animation-iteration-count: 1; /* how many times the animation will play */
+  animation-name: slideInFromLeft; /* the name of the animation we defined above */
+}

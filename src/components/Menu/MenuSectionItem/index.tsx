@@ -4,6 +4,7 @@ import './styles.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { LinkContainer } from 'react-router-bootstrap';
 
 type MenuSectionItemProps = {
   href: string;
@@ -23,15 +24,17 @@ const MenuSectionItem: FunctionComponent<MenuSectionItemProps> = props => {
   }
 
   return (
-    <Nav.Link href={props.href}>
-      <span className="menu-section-item-icon mr-3">
-        <FontAwesomeIcon icon={icon} />
-      </span>
-      <span className="menu-section-item-text">{props.text}</span>
-      {props.number && (
-        <span className="menu-section-item-number">{props.number}</span>
-      )}
-    </Nav.Link>
+    <LinkContainer to={props.href}>
+      <Nav.Link>
+        <span className="menu-section-item-icon mr-3">
+          <FontAwesomeIcon icon={icon} />
+        </span>
+        <span className="menu-section-item-text">{props.text}</span>
+        {props.number && (
+          <span className="menu-section-item-number">{props.number}</span>
+        )}
+      </Nav.Link>
+    </LinkContainer>
   );
 };
 

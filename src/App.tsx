@@ -6,8 +6,12 @@ import logo from './logo.svg';
 import authenticatedAxios from './services/authenticatedAxios';
 import { Container, Col, Row } from 'react-bootstrap';
 import Menu from './components/Menu';
+import Sidebar from './components/Sidebar';
 
-interface IAppProps {}
+interface IAppProps {
+  middleComponent: any;
+  sidebarComponent?: any;
+}
 
 const App: SFC<IAppProps> = props => {
   return (
@@ -19,11 +23,13 @@ const App: SFC<IAppProps> = props => {
           <Col xs={2} id="menu-section">
             <Menu />
           </Col>
-          <Col xs={6} id="main-section">
-            eae
+          <Col xs={8} id="main-section">
+            {props.middleComponent ?? 'Sem componente no meio.'}
           </Col>
-          <Col xs={4} id="right-bar-section">
-            eae
+          <Col xs={2} id="right-bar-section" className="pr-0">
+            {props.sidebarComponent && (
+              <Sidebar>{props.sidebarComponent}</Sidebar>
+            )}
           </Col>
         </Row>
       </Container>
