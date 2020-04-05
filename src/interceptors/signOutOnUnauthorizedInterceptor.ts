@@ -7,9 +7,18 @@ import routeConfig from '../routes.config';
  * @param err The Axios error.
  */
 const signOutUnauthorizedInterceptor = (err: AxiosError) => {
-  if (err.response?.status === 401 && err.response.data === 'Unauthorized') {
-    authentication.signOut();
-    window.location.href = routeConfig.signIn;
+  const isNetworkError: boolean =
+    err.message === 'Network Error' || err.message.includes('timeout');
+
+  if (
+    (err.response?.status === 401 && err.response.data === 'Unauthorized') ||
+    isNetworkError
+  ) {
+    if (!window.location.href.includes(routeConfig.signIn)) {
+      authentication.signOut();
+      window.location.href =
+        routeConfig.signIn + (isNetworkError ? '?err=Network+Error' : '');
+    }
   }
 
   return Promise.reject(err);

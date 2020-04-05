@@ -4,16 +4,10 @@ import {
   faProjectDiagram,
   faTasks,
 } from '@fortawesome/free-solid-svg-icons';
-import React, {
-  FunctionComponent,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { Media, Nav } from 'react-bootstrap';
 import SidebarContext from '../../contexts/SidebarContext';
-import { IUser } from '../../interfaces/IUser';
-import getAuthenticatedUser from '../../services/user/getAuthenticatedUser';
+import UserInfoContext from '../../contexts/UserInfoContext';
 import MenuSection from './MenuSection';
 import MenuSectionItem from './MenuSectionItem';
 import './styles.scss';
@@ -21,14 +15,8 @@ import './styles.scss';
 export interface IMenuProps {}
 
 const Menu: FunctionComponent<IMenuProps> = props => {
-  const [user, setUser] = useState<IUser>();
   const sidebarContext = useContext(SidebarContext);
-
-  useEffect(() => {
-    getAuthenticatedUser().then(res => {
-      setUser(res);
-    });
-  }, []);
+  const userInfoContext = useContext(UserInfoContext);
 
   return (
     <>
@@ -42,7 +30,7 @@ const Menu: FunctionComponent<IMenuProps> = props => {
             alt="Generic placeholder"
           />
           <Media.Body className="user-name">
-            {user?.firstName} {user?.lastName}
+            {userInfoContext.user?.firstName} {userInfoContext.user?.lastName}
           </Media.Body>
         </Media>
       </section>

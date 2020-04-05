@@ -5,7 +5,10 @@ import { Redirect } from 'react-router-dom';
 import routeConfig from '../../../routes.config';
 import HelmetConfig from '../../helmet/HelmetConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronRight,
+  faCircleNotch,
+} from '@fortawesome/free-solid-svg-icons';
 import {
   Container,
   Card,
@@ -29,21 +32,31 @@ const SignIn = ({ component, ...rest }) => {
   const [authError, setAuthError] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const { register, handleSubmit, errors } = useForm<IFormLoginData>();
+  const [isLoading, setIsLoading] = useState(false);
 
   /**
    * Submit the login data.
    */
   const onSubmit = handleSubmit(data => {
+    setIsLoading(true);
+
     Auth.signIn(data.username, data.password)
       .then(v => {
         setRedirectToReferrer(true);
       })
       .catch(reason => {
-        if (reason.data.message) {
+        if (reason?.data?.message) {
           setAuthError(reason.data.message);
+        } else {
+          setAuthError(
+            `A seguinte mensagem foi retornada pelo nosso serviço: ${reason.message}`
+          );
         }
 
         setShowAlert(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   });
 
@@ -122,9 +135,14 @@ const SignIn = ({ component, ...rest }) => {
                       </Form.Text>
                     )}
                   </Form.Group>
-                  <Button variant="primary" type="submit" disabled={false}>
-                    Entrar{' '}
-                    <FontAwesomeIcon icon={faChevronRight} className="ml-2" />
+                  <Button variant="primary" type="submit" disabled={isLoading}>
+                    <span className="mr-2 text-light">Entrar</span>
+                    <span className="text-light">
+                      {!isLoading && <FontAwesomeIcon icon={faChevronRight} />}
+                      {isLoading && (
+                        <FontAwesomeIcon icon={faCircleNotch} spin />
+                      )}
+                    </span>
                   </Button>
                 </Form>
               </Card.Body>

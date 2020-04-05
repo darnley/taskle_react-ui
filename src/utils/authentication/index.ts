@@ -32,7 +32,7 @@ class Auth {
           resolve(value);
         })
         .catch(reason => {
-          reject(reason.response);
+          reject(reason.response ?? reason);
         });
     });
   }
