@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import Login from './components/authentication/SignIn';
 import PrivateRoute from './components/authentication/PrivateRoute';
-import routeConfig from './routes.config';
+import Login from './components/authentication/SignIn';
 import SignOut from './components/authentication/SignOut';
-import Test from './components/Test';
 import MyProjects from './components/me/MyProjects';
-import MyTasks from './components/me/MyTasks';
 import CreateProject from './components/me/MyProjects/CreateProject';
+import MyTasks from './components/me/MyTasks';
+import Test from './components/Test';
+import './index.scss';
+import routeConfig from './routes.config';
+import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <BrowserRouter>
