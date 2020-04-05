@@ -1,19 +1,28 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import './styles.scss';
-import { Nav, Media } from 'react-bootstrap';
-import MenuSection from './MenuSection';
-import MenuSectionItem from './MenuSectionItem';
 import {
+  faChartPie,
+  faPeopleCarry,
   faProjectDiagram,
   faTasks,
-  faPeopleCarry,
-  faChartPie,
 } from '@fortawesome/free-solid-svg-icons';
-import getAuthenticatedUser from '../../services/user/getAuthenticatedUser';
+import React, {
+  FunctionComponent,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { Media, Nav } from 'react-bootstrap';
+import SidebarContext from '../../contexts/SidebarContext';
 import { IUser } from '../../interfaces/IUser';
+import getAuthenticatedUser from '../../services/user/getAuthenticatedUser';
+import MenuSection from './MenuSection';
+import MenuSectionItem from './MenuSectionItem';
+import './styles.scss';
 
-const Menu = props => {
+export interface IMenuProps {}
+
+const Menu: FunctionComponent<IMenuProps> = props => {
   const [user, setUser] = useState<IUser>();
+  const sidebarContext = useContext(SidebarContext);
 
   useEffect(() => {
     getAuthenticatedUser().then(res => {
@@ -67,6 +76,20 @@ const Menu = props => {
             />
           </MenuSection>
         </Nav>
+        <button
+          onClick={() => {
+            sidebarContext.setSidebarComponent(<span>Olá</span>);
+          }}
+        >
+          Teste contexto
+        </button>
+        <button
+          onClick={() => {
+            sidebarContext.setSidebarComponent(null);
+          }}
+        >
+          Teste contexto limpar
+        </button>
       </section>
     </>
   );
