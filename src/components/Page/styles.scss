@@ -1,0 +1,42 @@
+#middle-tabs-container {
+  *:focus {
+    outline: 0 !important;
+  }
+
+  .nav-tabs {
+    margin-top: 0.5em;
+    border: none;
+
+    .nav-item {
+      padding: 0.5rem 1em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #cecece;
+      font-size: 14pt;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .nav-item:hover {
+      border: 1px solid #e9ecef;
+      border-radius: 5px;
+    }
+
+    .nav-item.active {
+      border: 0;
+      color: #a9a9a9;
+    }
+
+    .nav-item#middle-tabs-tab-page-title {
+      color: #5d5d5d;
+      font-size: 24pt;
+      padding-left: 0;
+      padding-right: 1em;
+      border: none;
+    }
+  }
+
+  .tab-content {
+    margin-top: 1em;
+  }
+}
