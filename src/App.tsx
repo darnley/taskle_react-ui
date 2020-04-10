@@ -12,8 +12,8 @@ import { IUser } from './interfaces/IUser';
 import getAuthenticatedUser from './services/user/getAuthenticatedUser';
 
 interface IAppProps {
-  middleComponent: any;
-  sidebarComponent?: any;
+  middleComponent: React.ReactElement;
+  sidebarComponent?: React.ReactElement;
 }
 
 const App: FunctionComponent<IAppProps> = props => {

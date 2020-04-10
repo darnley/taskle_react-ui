@@ -3,7 +3,6 @@ import './styles.scss';
 
 interface IMenuSectionProps {
   name: string;
-  children: any;
 }
 
 const MenuSection: FunctionComponent<IMenuSectionProps> = props => {

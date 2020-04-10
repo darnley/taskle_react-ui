@@ -21,7 +21,7 @@ export interface ISidebarContext extends ISidebarChangerContext {
   /**
    * The sidebar component.
    */
-  sidebarComponent: any;
+  sidebarComponent: React.ReactElement;
 }
 
 /**

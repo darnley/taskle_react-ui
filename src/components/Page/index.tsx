@@ -8,7 +8,7 @@ export interface IPageProps {
    * The default tab. It must be the value of `eventKey` of a Tab.
    */
   defaultTab?: string;
-  tabs?: any[];
+  tabs?: React.ReactElement<Tab>[];
 }
 
 const Page: React.FunctionComponent<IPageProps> = props => {
