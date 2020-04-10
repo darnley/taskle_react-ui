@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useContext } from 'react';
 import SidebarContext from '@app/contexts/SidebarContext';
-
-interface IMyProjectsProps {}
+import IMyProjectsProps from '@app/interfaces/props/IMyProjectsProps';
 
 const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
   const sidebarContext = useContext(SidebarContext);

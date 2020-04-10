@@ -1,10 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import './styles.scss';
-
-interface IMenuSectionProps {
-  name: string;
-  children: any;
-}
+import IMenuSectionProps from '@app/interfaces/props/IMenuSectionProps';
 
 const MenuSection: FunctionComponent<IMenuSectionProps> = props => {
   return (

@@ -1,9 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import Helmet from 'react-helmet';
-
-interface ITitleProps {
-  title?: string;
-}
+import ITitleProps from '@app/interfaces/props/ITitleProps';
 
 const HelmetConfig: FunctionComponent<ITitleProps> = props => {
   var title = 'Taskle';

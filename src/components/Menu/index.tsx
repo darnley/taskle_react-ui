@@ -1,3 +1,6 @@
+import SidebarContext from '@app/contexts/SidebarContext';
+import UserInfoContext from '@app/contexts/UserInfoContext';
+import IMenuProps from '@app/interfaces/props/IMenuProps';
 import {
   faChartPie,
   faPeopleCarry,
@@ -6,13 +9,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import React, { FunctionComponent, useContext } from 'react';
 import { Media, Nav } from 'react-bootstrap';
-import SidebarContext from '@app/contexts/SidebarContext';
-import UserInfoContext from '@app/contexts/UserInfoContext';
 import MenuSection from './MenuSection';
 import MenuSectionItem from './MenuSectionItem';
 import './styles.scss';
-
-export interface IMenuProps {}
 
 const Menu: FunctionComponent<IMenuProps> = props => {
   const sidebarContext = useContext(SidebarContext);

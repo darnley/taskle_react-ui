@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
-
-interface IMyTasksProps {}
+import IMyTasksProps from '@app/interfaces/props/IMyTasksProps';
 
 const MyTasks: FunctionComponent<IMyTasksProps> = props => {
   return <>Página Minhas Tarefas</>;

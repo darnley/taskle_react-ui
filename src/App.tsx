@@ -5,16 +5,15 @@ import './App.scss';
 import HelmetConfig from './components/helmet/HelmetConfig';
 import Menu from './components/Menu';
 import Sidebar from './components/Sidebar';
-import LoadingContext, { ILoadingContext } from './contexts/LoadingContext';
-import SidebarContext, { ISidebarContext } from './contexts/SidebarContext';
-import UserInfoContext, { IUserInfoContext } from './contexts/UserInfoContext';
+import LoadingContext from './contexts/LoadingContext';
+import SidebarContext from './contexts/SidebarContext';
+import UserInfoContext from './contexts/UserInfoContext';
+import ILoadingContext from './interfaces/contexts/ILoadingContext';
+import ISidebarContext from './interfaces/contexts/ISidebarContext';
+import IUserInfoContext from './interfaces/contexts/IUserInfoContext';
 import { IUser } from './interfaces/IUser';
+import IAppProps from './interfaces/props/IAppProps';
 import getAuthenticatedUser from './services/user/getAuthenticatedUser';
-
-interface IAppProps {
-  middleComponent: any;
-  sidebarComponent?: any;
-}
 
 const App: FunctionComponent<IAppProps> = props => {
   const [sidebarComponent, setSidebarComponent] = useState<any>();
