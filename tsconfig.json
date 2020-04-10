@@ -17,7 +17,15 @@
     "noImplicitAny": false,
     "baseUrl": "src",
     "paths": {
-      "@app/*": ["./*"]
+      "@root/*": ["./*"],
+      "@components/*": ["components/*"],
+      "@contexts/*": ["contexts/*"],
+      "@enums/*": ["enums/*"],
+      "@interceptors/*": ["interceptors/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@services/*": ["services/*"],
+      "@tsTypes/*": ["tsTypes/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": ["src"]
