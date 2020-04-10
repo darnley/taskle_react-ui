@@ -1,5 +1,11 @@
 import React from 'react';
-import IUserInfoContext from '@app/interfaces/contexts/IUserInfoContext';
+import { IUser } from '@app/interfaces/IUser';
+
+export interface IUserInfoContext {
+  user?: IUser;
+  getUserInfo?: () => Promise<IUser>;
+  checkAuth?: () => Promise<boolean>;
+}
 
 const UserInfoContext = React.createContext<IUserInfoContext>({});
 

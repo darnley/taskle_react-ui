@@ -1,5 +1,9 @@
 import React from 'react';
-import ILoadingContext from '@app/interfaces/contexts/ILoadingContext';
+
+export interface ILoadingContext {
+  isLoading: boolean;
+  setLoading: (value: boolean) => void;
+}
 
 const LoadingContext = React.createContext<ILoadingContext>({
   isLoading: false,

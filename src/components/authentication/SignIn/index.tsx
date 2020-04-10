@@ -1,26 +1,30 @@
-import HelmetConfig from '@app/components/helmet/HelmetConfig';
-import IFormLoginData from '@app/interfaces/props/IFormLoginData';
-import routeConfig from '@app/routes.config';
-import RBRef from '@app/types/RBRef';
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import Auth from '@app/utils/authentication';
+import { Redirect } from 'react-router-dom';
+import routeConfig from '@app/routes.config';
+import HelmetConfig from '@app/components/helmet/HelmetConfig';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronRight,
   faCircleNotch,
 } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
 import {
-  Alert,
-  Button,
-  Card,
-  Col,
   Container,
+  Card,
   Form,
+  Button,
+  Alert,
+  Col,
   Row,
 } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-import { Redirect } from 'react-router-dom';
+import RBRef from '@app/types/RBRef';
+import classNames from 'classnames';
+
+interface IFormLoginData {
+  username: string;
+  password: string;
+}
 
 const SignIn = ({ component, ...rest }) => {
   const alertTimeoutInMs: number = 30000;

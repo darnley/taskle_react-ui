@@ -1,7 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import './styles.scss';
 import { Container } from 'react-bootstrap';
-import ISidebarProps from '@app/interfaces/props/ISidebarProps';
+
+interface ISidebarProps {}
 
 const Sidebar: FunctionComponent<ISidebarProps> = props => {
   return (
