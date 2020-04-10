@@ -1,4 +1,4 @@
-import authentication from '../utils/authentication';
+import authentication from '@app/utils/authentication';
 import { AxiosRequestConfig } from 'axios';
 
 /**

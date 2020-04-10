@@ -1,4 +1,4 @@
-import Role from '../enums/Role';
+import Role from '@app/enums/Role';
 
 /**
  * The system's user.

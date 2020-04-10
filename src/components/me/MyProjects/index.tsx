@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext } from 'react';
-import SidebarContext from '../../../contexts/SidebarContext';
+import SidebarContext from '@app/contexts/SidebarContext';
 
 interface IMyProjectsProps {}
 

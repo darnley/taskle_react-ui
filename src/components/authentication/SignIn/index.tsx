@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import Auth from '../../../utils/authentication';
+import Auth from '@app/utils/authentication';
 import { Redirect } from 'react-router-dom';
-import routeConfig from '../../../routes.config';
-import HelmetConfig from '../../helmet/HelmetConfig';
+import routeConfig from '@app/routes.config';
+import HelmetConfig from '@app/components/helmet/HelmetConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronRight,
@@ -18,7 +18,7 @@ import {
   Col,
   Row,
 } from 'react-bootstrap';
-import RBRef from '../../../types/RBRef';
+import RBRef from '@app/types/RBRef';
 import classNames from 'classnames';
 
 interface IFormLoginData {

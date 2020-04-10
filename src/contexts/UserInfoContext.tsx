@@ -1,5 +1,5 @@
 import React from 'react';
-import { IUser } from '../interfaces/IUser';
+import { IUser } from '@app/interfaces/IUser';
 
 export interface IUserInfoContext {
   user?: IUser;

@@ -1,6 +1,6 @@
-import authenticatedAxios from '../authenticatedAxios';
-import { IUser } from '../../interfaces/IUser';
-import routeConfig from '../../routes.config';
+import authenticatedAxios from '@app/services/authenticatedAxios';
+import { IUser } from '@app/interfaces/IUser';
+import routeConfig from '@app/routes.config';
 
 const getAuthenticatedUser = (): Promise<IUser> => {
   return new Promise((resolve, reject) => {
