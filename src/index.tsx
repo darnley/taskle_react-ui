@@ -12,6 +12,8 @@ import Test from './components/Test';
 import './index.scss';
 import routeConfig from './routes.config';
 import * as serviceWorker from './serviceWorker';
+import Page from './components/Page';
+import { Tab } from 'react-bootstrap';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -31,7 +33,25 @@ ReactDOM.render(
       <PrivateRoute
         path="/me/projects"
         exact={true}
-        component={() => <App middleComponent={<MyProjects />} />}
+        component={() => (
+          <App
+            middleComponent={
+              <Page
+                name="Meus projetos"
+                children={<MyProjects />}
+                //defaultTab="profile"
+                tabs={[
+                  <Tab eventKey="home" title="Home" key={1}>
+                    test
+                  </Tab>,
+                  <Tab eventKey="profile" title="Profile" key={2}>
+                    test
+                  </Tab>,
+                ]}
+              />
+            }
+          />
+        )}
       />
       <PrivateRoute
         path="/me/projects/create"
