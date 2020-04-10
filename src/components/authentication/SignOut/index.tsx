@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import authentication from '@app/utils/authentication';
-import routeConfig from '@app/routes.config';
+import authentication from '../../../utils/authentication';
+import routeConfig from '../../../routes.config';
 import { useHistory } from 'react-router-dom';
 
 interface ISignOutProps {}

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
-import addBearerInterceptor from '@app/interceptors/addBearerInterceptor';
-import signOutUnauthorizedInterceptor from '@app/interceptors/signOutOnUnauthorizedInterceptor';
+import addBearerInterceptor from '../interceptors/addBearerInterceptor';
+import signOutUnauthorizedInterceptor from '../interceptors/signOutOnUnauthorizedInterceptor';
 
 /**
  * The authenticated Axios instance.

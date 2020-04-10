@@ -1,4 +1,4 @@
-import authenticatedAxios from '@app/services/authenticatedAxios';
+import authenticatedAxios from '../../services/authenticatedAxios';
 
 /**
  * Deals with user authentication through API

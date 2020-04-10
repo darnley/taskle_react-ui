@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
-import authentication from '@app/utils/authentication';
-import routeConfig from '@app/routes.config';
+import authentication from '../utils/authentication';
+import routeConfig from '../routes.config';
 
 /**
  * When the API returns unauthorized, redirect the user to sign out screen.
