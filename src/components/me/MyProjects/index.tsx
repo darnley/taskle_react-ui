@@ -8,7 +8,6 @@ const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
 
   return (
     <>
-      <h1>Página Meus projetos</h1>
       <button
         onClick={() => {
           sidebarContext.setSidebarComponent(<span>Teste</span>);
