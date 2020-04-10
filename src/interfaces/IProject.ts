@@ -10,9 +10,10 @@ export interface IProjectVisibility {
 export default interface IProject {
   _id: string;
   name: string;
-  status: ProjectStatus | string;
+  status: ProjectStatus;
   description?: string;
   keywords?: string[];
   manager: IUser | string;
   visibility: IProjectVisibility;
+  createdAt: Date;
 }
