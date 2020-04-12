@@ -71,9 +71,9 @@ const SignIn = ({ component, ...rest }) => {
 
   if (!Auth.isAuthenticated && !redirectToReferrer) {
     return (
-      <Container fluid>
+      <Container fluid className="d-flex h-100">
         <HelmetConfig title="Autenticação" />
-        <Row className="align-middle">
+        <Row className="align-items-center w-100">
           <Col md={{ span: 4, offset: 4 }}>
             <Card>
               <Card.Body>
