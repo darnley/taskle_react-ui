@@ -31,6 +31,9 @@ const App: FunctionComponent<IAppProps> = props => {
   const sidebarContextValue: ISidebarContext = {
     sidebarComponent,
     setSidebarComponent,
+    removeSidebarComponent: () => {
+      setSidebarComponent(null);
+    },
   };
 
   const userInfoContextValue: IUserInfoContext = {

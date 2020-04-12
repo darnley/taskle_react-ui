@@ -10,6 +10,11 @@ export interface ISidebarChangerContext {
    * @field
    */
   setSidebarComponent: (newComponent: any) => void;
+  /**
+   * Remove the sidebar.
+   * The component and its state will be cleaned.
+   */
+  removeSidebarComponent: () => void;
 }
 
 /**
@@ -30,6 +35,7 @@ export interface ISidebarContext extends ISidebarChangerContext {
 const SidebarContext = React.createContext<ISidebarContext>({
   sidebarComponent: <span></span>,
   setSidebarComponent: newComponent => {},
+  removeSidebarComponent: () => {},
 });
 
 export default SidebarContext;
