@@ -1,7 +1,14 @@
-#current-user-info {
-  margin-top: 1em;
-}
-
 .media {
   align-items: center;
+}
+
+#menu-header-logo {
+  width: auto;
+  height: 2rem;
+}
+
+#card-menu {
+  .card-header {
+    padding: 0.5rem 1rem;
+  }
 }

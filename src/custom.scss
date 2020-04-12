@@ -1,9 +1,24 @@
 /* make the customizations */
-$theme-colors: ();
+$theme-colors: (
+  'primary': #36a5ea,
+  'success': #58d875,
+  'danger': #e56363,
+);
 
-$body-bg: #fbfbfb;
+$body-bg: #f3f3f3;
 $font-size-base: 0.8rem;
 $font-family-base: 'Roboto', sans-serif;
+
+// Border
+$border-radius: 0.75em;
+
+// Card
+$card-spacer-y: 1rem;
+$card-spacer-x: 1rem;
+
+.btn-success {
+  color: white !important;
+}
 
 /* import bootstrap to set changes */
 @import '~bootstrap/scss/bootstrap';

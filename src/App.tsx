@@ -95,7 +95,7 @@ const App: FunctionComponent<IAppProps> = props => {
                             className="h-100"
                           >
                             <Row className="h-100">
-                              <Col xs={2} id="menu-section">
+                              <Col xs={2} id="menu-section d-flex">
                                 <Menu />
                               </Col>
                               <Col xs={8} id="main-section">
@@ -104,7 +104,7 @@ const App: FunctionComponent<IAppProps> = props => {
                               <Col
                                 xs={2}
                                 id="right-bar-section"
-                                className="pr-0"
+                                className="pr-0 mb-4"
                               >
                                 {sidebarComponent && (
                                   <Sidebar>{sidebarComponent}</Sidebar>

@@ -3,7 +3,10 @@ import SidebarContext from '../../../contexts/SidebarContext';
 import IProject from '../../../interfaces/IProject';
 import getMyProjects from '../../../services/me/getMyProjects';
 import ProjectItem from './ProjectItem';
-import { InputGroup, FormControl } from 'react-bootstrap';
+import { InputGroup, FormControl, Button, Col } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import CreateProject from './CreateProject';
 
 interface IMyProjectsProps {}
 
@@ -29,6 +32,11 @@ const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
     }
   };
 
+  const handleCreateProjectClick = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    sidebarContext.setSidebarComponent(<CreateProject />);
+  };
+
   useMemo(() => {
     if (searchProject.trim().length > 0) {
       const found = myProjects?.filter(project =>
@@ -46,13 +54,19 @@ const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
 
   return (
     <>
-      <div className="my-projects-header mb-3 w-30">
-        <InputGroup>
+      <div className="my-projects-header mb-3 d-flex">
+        <InputGroup className="mr-3">
           <FormControl
             placeholder="Pesquisa pelo projeto..."
             onChange={handleProjectSearchChange}
           />
         </InputGroup>
+        <span className="float-right">
+          <Button className="text-nowrap" onClick={handleCreateProjectClick}>
+            <FontAwesomeIcon icon={faPlus} className="mr-1" />
+            Criar projeto
+          </Button>
+        </span>
       </div>
       <div className="project-list">
         {!myProjects && 'Obtendo dados...'}

@@ -10,10 +10,10 @@ $border-header-color: #d2d2d2;
   font-weight: normal;
   text-transform: uppercase;
   color: $header-color;
-  border-top: solid $border-header-color 1px;
+  //border-top: solid $border-header-color 1px;
   text-align: center;
   padding-top: 0.7em;
-  margin-top: 1em;
+  //margin-top: 1em;
 }
 
 @include media-breakpoint-between(xs, xs) {
