@@ -60,7 +60,7 @@ const Menu: FunctionComponent<IMenuProps> = props => {
               </MenuSection>
               <MenuSection name="Minha organização">
                 <MenuSectionItem
-                  href="/home"
+                  href="/organization"
                   text="Pessoas"
                   icon={faPeopleCarry}
                   number={145}
