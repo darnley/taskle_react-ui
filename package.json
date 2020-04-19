@@ -22,6 +22,7 @@
     "node-sass": "^4.13.1",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0",
+    "react-bootstrap-typeahead": "^4.2.2",
     "react-dom": "^16.13.0",
     "react-helmet": "^5.2.1",
     "react-hook-form": "^5.1.3",
