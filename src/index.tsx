@@ -14,6 +14,8 @@ import routeConfig from './routes.config';
 import * as serviceWorker from './serviceWorker';
 import Page from './components/Page';
 import { Tab } from 'react-bootstrap';
+import People from './components/organization/People';
+import Teams from './components/organization/Teams';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -60,6 +62,33 @@ ReactDOM.render(
         path="/me/tasks"
         exact={true}
         component={() => <App middleComponent={<MyTasks />} />}
+      />
+      <PrivateRoute
+        path="/organization"
+        exact={true}
+        component={() => (
+          <App
+            middleComponent={
+              <Page
+                name="Minha organização"
+                tabs={[
+                  <Tab
+                    eventKey="org-people"
+                    title="Pessoas"
+                    key={1}
+                    children={<People />}
+                  />,
+                  <Tab
+                    eventKey="org-teams"
+                    title="Equipes"
+                    key={2}
+                    children={<Teams />}
+                  />,
+                ]}
+              />
+            }
+          />
+        )}
       />
       <PrivateRoute path={routeConfig.signOut} component={SignOut} />
       <Route path={routeConfig.signIn} exact={true} component={Login} />
