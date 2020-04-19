@@ -5,6 +5,7 @@ import Role from '../enums/Role';
  * @interface IUser
  */
 export interface IUser {
+  _id: string;
   /**
    * The user's first name
    * @type {string}
@@ -57,4 +58,8 @@ export interface IUser {
   starRating: number;
 
   starRatingCount: number;
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }
