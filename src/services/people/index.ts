@@ -1,7 +1,7 @@
 import { IUser } from '../../interfaces/IUser';
 import authenticatedAxios from '../authenticatedAxios';
 
-export function getAll(): Promise<IUser[]> {
+export function getAllPeople(): Promise<IUser[]> {
   return new Promise<IUser[]>((resolve, reject) => {
     authenticatedAxios
       .get<IUser[]>('/people')
@@ -14,10 +14,14 @@ export function getAll(): Promise<IUser[]> {
   });
 }
 
-export function add(): Promise<IUser> {
+export function addPerson(user: IUser): Promise<IUser> {
+  if (!user) {
+    throw new Error("Param 'user' is required.");
+  }
+
   return new Promise<IUser>((resolve, reject) => {
     authenticatedAxios
-      .post<IUser>('/people')
+      .post<IUser>('/people', user)
       .then(res => {
         resolve(res.data);
       })
@@ -27,7 +31,7 @@ export function add(): Promise<IUser> {
   });
 }
 
-export function get(userId: string): Promise<IUser> {
+export function getPerson(userId: string): Promise<IUser> {
   if (!userId) {
     throw Error("Param 'userId' is required.");
   }
