@@ -71,6 +71,7 @@ ReactDOM.render(
             middleComponent={
               <Page
                 name="Minha organização"
+                defaultTab="org-people"
                 tabs={[
                   <Tab
                     eventKey="org-people"
