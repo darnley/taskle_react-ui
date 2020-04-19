@@ -1,6 +1,6 @@
 import React from 'react';
-import { IUser } from '../../../../interfaces/IUser';
-import { Card, Col, CardGroup, CardDeck, Row } from 'react-bootstrap';
+import { IUser } from '../../../../../interfaces/IUser';
+import { Card, Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import './styles.scss';

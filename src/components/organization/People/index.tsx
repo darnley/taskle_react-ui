@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { IUser } from '../../../interfaces/IUser';
 import { getAllPeople } from '../../../services/people';
-import { InputGroup, FormControl, Button, CardDeck } from 'react-bootstrap';
+import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import PersonItem from './PersonItem';
 import AddPerson from './AddPerson';
 import SidebarContext from '../../../contexts/SidebarContext';
-import { useToasts } from 'react-toast-notifications';
 import PeopleDeck from './PeopleDeck';
 
 export interface IPeopleProps {}
@@ -18,7 +16,6 @@ const People: React.FunctionComponent<IPeopleProps> = props => {
   const [searchPeople, setSearchPeople] = useState('');
   const sidebarContext = useContext(SidebarContext);
   const [refreshCount, setRefreshCount] = useState(0);
-  const { addToast } = useToasts();
 
   useEffect(() => {
     getAllPeople().then(people => {

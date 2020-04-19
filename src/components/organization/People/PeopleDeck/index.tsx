@@ -1,6 +1,6 @@
 import React from 'react';
 import { IUser } from '../../../../interfaces/IUser';
-import PersonItem from '../PersonItem';
+import PersonItem from './PersonItem';
 import { CardDeck } from 'react-bootstrap';
 import chunkArray from '../../../../utils/chunkArray';
 
