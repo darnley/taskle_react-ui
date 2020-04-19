@@ -16,86 +16,89 @@ import Page from './components/Page';
 import { Tab } from 'react-bootstrap';
 import People from './components/organization/People';
 import Teams from './components/organization/Teams';
+import { ToastProvider } from 'react-toast-notifications';
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Switch>
-      <PrivateRoute
-        path="/home"
-        exact={true}
-        component={() => <Redirect to="/me/projects" />}
-      />
-      <PrivateRoute
-        path="/me/projects"
-        exact={true}
-        component={() => (
-          <App
-            middleComponent={
-              <Page
-                name="Meus projetos"
-                children={<MyProjects />}
-                //defaultTab="profile"
-                tabs={[
-                  <Tab eventKey="home" title="Home" key={1}>
-                    test
-                  </Tab>,
-                  <Tab eventKey="profile" title="Profile" key={2}>
-                    test
-                  </Tab>,
-                ]}
-              />
-            }
-          />
-        )}
-      />
-      <PrivateRoute
-        path="/me/projects/create"
-        exact={true}
-        component={() => (
-          <App
-            middleComponent={<MyProjects />}
-            sidebarComponent={<CreateProject />}
-          />
-        )}
-      />
-      <PrivateRoute
-        path="/me/tasks"
-        exact={true}
-        component={() => <App middleComponent={<MyTasks />} />}
-      />
-      <PrivateRoute
-        path="/organization"
-        exact={true}
-        component={() => (
-          <App
-            middleComponent={
-              <Page
-                name="Minha organização"
-                defaultTab="org-people"
-                tabs={[
-                  <Tab
-                    eventKey="org-people"
-                    title="Pessoas"
-                    key={1}
-                    children={<People />}
-                  />,
-                  <Tab
-                    eventKey="org-teams"
-                    title="Equipes"
-                    key={2}
-                    children={<Teams />}
-                  />,
-                ]}
-              />
-            }
-          />
-        )}
-      />
-      <PrivateRoute path={routeConfig.signOut} component={SignOut} />
-      <Route path={routeConfig.signIn} exact={true} component={Login} />
-      <Route path="/" exact={true} component={() => <Redirect to="home" />} />
-    </Switch>
-  </BrowserRouter>,
+  <ToastProvider autoDismiss>
+    <BrowserRouter>
+      <Switch>
+        <PrivateRoute
+          path="/home"
+          exact={true}
+          component={() => <Redirect to="/me/projects" />}
+        />
+        <PrivateRoute
+          path="/me/projects"
+          exact={true}
+          component={() => (
+            <App
+              middleComponent={
+                <Page
+                  name="Meus projetos"
+                  children={<MyProjects />}
+                  //defaultTab="profile"
+                  tabs={[
+                    <Tab eventKey="home" title="Home" key={1}>
+                      test
+                    </Tab>,
+                    <Tab eventKey="profile" title="Profile" key={2}>
+                      test
+                    </Tab>,
+                  ]}
+                />
+              }
+            />
+          )}
+        />
+        <PrivateRoute
+          path="/me/projects/create"
+          exact={true}
+          component={() => (
+            <App
+              middleComponent={<MyProjects />}
+              sidebarComponent={<CreateProject />}
+            />
+          )}
+        />
+        <PrivateRoute
+          path="/me/tasks"
+          exact={true}
+          component={() => <App middleComponent={<MyTasks />} />}
+        />
+        <PrivateRoute
+          path="/organization"
+          exact={true}
+          component={() => (
+            <App
+              middleComponent={
+                <Page
+                  name="Minha organização"
+                  defaultTab="org-people"
+                  tabs={[
+                    <Tab
+                      eventKey="org-people"
+                      title="Pessoas"
+                      key={1}
+                      children={<People />}
+                    />,
+                    <Tab
+                      eventKey="org-teams"
+                      title="Equipes"
+                      key={2}
+                      children={<Teams />}
+                    />,
+                  ]}
+                />
+              }
+            />
+          )}
+        />
+        <PrivateRoute path={routeConfig.signOut} component={SignOut} />
+        <Route path={routeConfig.signIn} exact={true} component={Login} />
+        <Route path="/" exact={true} component={() => <Redirect to="home" />} />
+      </Switch>
+    </BrowserRouter>
+  </ToastProvider>,
   document.getElementById('root')
 );
 
