@@ -24,13 +24,6 @@ ReactDOM.render(
         component={() => <Redirect to="/me/projects" />}
       />
       <PrivateRoute
-        path="/test-change"
-        exact={true}
-        component={() => (
-          <App middleComponent={<Test />} sidebarComponent={<Test />} />
-        )}
-      />
-      <PrivateRoute
         path="/me/projects"
         exact={true}
         component={() => (
