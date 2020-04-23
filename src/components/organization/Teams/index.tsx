@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import ITeam from '../../../interfaces/ITeam';
 import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { getAllTeams } from '../../../services/team';
 import TeamsDeck from './TeamsDeck';
+import SidebarContext from '../../../contexts/SidebarContext';
+import AddTeam from './AddTeam';
 
 export interface ITeamsProps {}
 
@@ -12,13 +14,15 @@ const Teams: React.FunctionComponent<ITeamsProps> = props => {
   const [teams, setTeams] = useState<ITeam[]>();
   const [teamList, setTeamList] = useState<ITeam[]>();
   const [searchTeam, setSearchTeam] = useState('');
+  const sidebarContext = useContext(SidebarContext);
+  const [refreshCount, setRefreshCount] = useState(0);
 
   useEffect(() => {
     getAllTeams().then(res => {
       setTeams(res);
       setTeamList(res);
     });
-  }, []);
+  }, [refreshCount]);
 
   useMemo(() => {
     if (searchTeam.trim().length > 0) {
@@ -42,7 +46,15 @@ const Teams: React.FunctionComponent<ITeamsProps> = props => {
     }
   };
 
-  const handleCreateTeamClick = e => {};
+  const onTeamAdded = () => {
+    sidebarContext.removeSidebarComponent();
+    setRefreshCount(refreshCount + 1);
+  };
+
+  const handleCreateTeamClick = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    sidebarContext.setSidebarComponent(<AddTeam onTeamAdded={onTeamAdded} />);
+  };
 
   return (
     <>
