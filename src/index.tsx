@@ -17,6 +17,7 @@ import { Tab } from 'react-bootstrap';
 import People from './components/organization/People';
 import Teams from './components/organization/Teams';
 import { ToastProvider } from 'react-toast-notifications';
+import ProjectTasks from './components/projects/ProjectTasks';
 
 ReactDOM.render(
   <ToastProvider autoDismiss>
@@ -86,6 +87,28 @@ ReactDOM.render(
                       title="Equipes"
                       key={2}
                       children={<Teams />}
+                    />,
+                  ]}
+                />
+              }
+            />
+          )}
+        />
+        <PrivateRoute
+          path="/projects/:projectId"
+          exact
+          component={() => (
+            <App
+              middleComponent={
+                <Page
+                  name="Projeto"
+                  defaultTab="project-tasks"
+                  tabs={[
+                    <Tab
+                      eventKey="project-tasks"
+                      title="Tarefas"
+                      key={1}
+                      children={<ProjectTasks />}
                     />,
                   ]}
                 />

@@ -1,7 +1,8 @@
 import React from 'react';
 import IProject from '../../../../interfaces/IProject';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Card, Col, Row, Button } from 'react-bootstrap';
 import './styles.scss';
+import { Link } from 'react-router-dom';
 
 export interface IProjectItemProps {
   project: IProject;
@@ -24,8 +25,11 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
                 year: 'numeric',
               }).format(new Date(props.project.createdAt))}
             </Row>
+            <Row>
+              <Link to={`/projects/${props.project._id}`}>Ver</Link>
+            </Row>
           </Col>
-          <Col md={8}></Col>
+          <Col md={6}></Col>
         </Card.Body>
       </Card>
     </div>
