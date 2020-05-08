@@ -1,0 +1,14 @@
+.add-task-keywords {
+    font-size: 12pt;
+
+    .badge {
+        border-radius: 0.2rem;
+        font-weight: normal;
+
+        .times-icon {
+            color: #d0d0d0;
+            cursor: pointer;
+            font-size: 7pt;
+        }
+    }
+}

@@ -37,7 +37,11 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
       <Row className="project-tasks-menu">
         <Button
           variant="primary"
-          onClick={() => sidebarContext.setSidebarComponent(<TaskAdd />)}
+          onClick={() =>
+            sidebarContext.setSidebarComponent(
+              <TaskAdd projectId={projectId} />
+            )
+          }
         >
           Criar nova tarefa
         </Button>

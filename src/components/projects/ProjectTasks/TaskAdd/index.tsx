@@ -3,13 +3,18 @@ import { ITask } from '../../../../interfaces/ITask';
 import { useForm } from 'react-hook-form';
 import IFormDataAddTask from '../../../../interfaces/forms/IFormDataAddTask';
 import { getTask } from '../../../../services/project/task';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Badge } from 'react-bootstrap';
 import classNames from 'classnames';
 import RBRef from '../../../../types/RBRef';
 import { IUser } from '../../../../interfaces/IUser';
 import { getAllPeople } from '../../../../services/people';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import TaskComplexity from '../../../../enums/TaskComplexity';
+import IProject from '../../../../interfaces/IProject';
+import { getAllKeywords } from '../../../../services/keywords';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import './styles.scss';
 
 export interface ITaskEditProps {
   projectId?: string;
@@ -21,16 +26,22 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   const [task, setTask] = useState<ITask>();
   const [people, setPeople] = useState<IUser[]>();
   const [selectedResponsible, setSelectedResponsible] = useState<IUser>();
+  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
 
   useEffect(() => {
-    getTask(props.projectId!, props.taskId!)
-      .then(task => {
-        setTask(task);
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    if (props.projectId && props.taskId) {
+      getTask(props.projectId!, props.taskId!)
+        .then(task => {
+          setTask(task);
+          setSelectedKeywords(task.keywords);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    } else {
+      setTask({} as ITask);
+    }
 
     getAllPeople()
       .then(people => {
@@ -39,10 +50,30 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
       .catch(err => {
         console.error(err);
       });
+
+    getAllKeywords()
+      .then(keywords => {
+        setKeywords(keywords);
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }, [props.projectId, props.taskId]);
 
   const onSubmit = handleSubmit(data => {
-    console.log(1);
+    data.project = {
+      _id: props.projectId!,
+    } as IProject;
+
+    data.responsible = {
+      _id: (data as any).responsibleTemp,
+    } as IUser;
+
+    delete (data as any).responsibleTemp;
+
+    data.keywords = selectedKeywords!;
+
+    console.log(data);
   });
 
   const handleResponsibleChange = (selectedUser: IUser[]) => {
@@ -50,7 +81,22 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   };
 
   const handleKeywordChange = (selectedKeyword: string[]) => {
-    // nothing
+    if (!selectedKeyword[0] || selectedKeywords.includes(selectedKeyword[0]))
+      return;
+
+    setSelectedKeywords([...selectedKeywords!, selectedKeyword[0]]);
+  };
+
+  const removeKeywordFromSelectedOnes = (keywordToRemove: string) => {
+    const foundIndex = selectedKeywords.findIndex(
+      keyword => keyword === keywordToRemove
+    );
+
+    if (foundIndex > -1) {
+      let arr = [...selectedKeywords];
+      arr.splice(foundIndex, 1);
+      setSelectedKeywords(arr);
+    }
   };
 
   return (
@@ -59,7 +105,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
         <Form.Label>Responsável</Form.Label>
         <Form.Control
           type="hidden"
-          name="responsible"
+          name="responsibleTemp"
           value={selectedResponsible?._id}
           ref={
             register({
@@ -103,6 +149,19 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
       </Form.Group>
       <Form.Group>
         <Form.Label>Palavras-chave</Form.Label>
+        <div className="mb-2 add-task-keywords">
+          {selectedKeywords.map((keyword, index) => (
+            <Badge variant="secondary" className="mr-1" key={keyword}>
+              {keyword}{' '}
+              <span
+                className="times-icon"
+                onClick={() => removeKeywordFromSelectedOnes(keyword)}
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </span>
+            </Badge>
+          ))}
+        </div>
         <Typeahead
           options={keywords}
           labelKey="keywords"
@@ -123,6 +182,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
         <Form.Label>Complexidade</Form.Label>
         <Form.Control
           as="select"
+          name="complexity"
           className={classNames({
             'is-invalid': errors.complexity,
           })}
@@ -141,7 +201,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
       <Form.Group controlId="deliveryDate">
         <Form.Label>Data de entrega</Form.Label>
         <Form.Control
-          type="date"
+          type="datetime-local"
           name="deliveryDate"
           className={classNames({
             'is-invalid': errors.deliveryDate,
