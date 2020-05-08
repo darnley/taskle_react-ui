@@ -10,7 +10,7 @@ export interface ITask {
   milestone: string;
   status: TaskStatus;
   project: IProject | string;
-  responsible?: IUser | string;
+  responsible?: IUser;
   complexity: TaskComplexity;
   deliveryDate?: Date;
 }
