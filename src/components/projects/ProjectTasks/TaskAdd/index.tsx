@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ITask } from '../../../../interfaces/ITask';
 import { useForm } from 'react-hook-form';
 import IFormDataAddTask from '../../../../interfaces/forms/IFormDataAddTask';
@@ -8,13 +8,14 @@ import classNames from 'classnames';
 import RBRef from '../../../../types/RBRef';
 import { IUser } from '../../../../interfaces/IUser';
 import { getAllPeople } from '../../../../services/people';
-import { Typeahead } from 'react-bootstrap-typeahead';
+import { Typeahead, TypeaheadModel } from 'react-bootstrap-typeahead';
 import TaskComplexity from '../../../../enums/TaskComplexity';
 import IProject from '../../../../interfaces/IProject';
 import { getAllKeywords } from '../../../../services/keywords';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import './styles.scss';
+import moment from 'moment';
 
 export interface ITaskEditProps {
   projectId?: string;
@@ -28,6 +29,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   const [selectedResponsible, setSelectedResponsible] = useState<IUser>();
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
+  const typeaheadKeywords = useRef<Typeahead<TypeaheadModel>>();
 
   useEffect(() => {
     if (props.projectId && props.taskId) {
@@ -73,7 +75,18 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
 
     data.keywords = selectedKeywords!;
 
+    if (data.deliveryDate)
+      data.deliveryDate = moment(data.deliveryDate)
+        .local()
+        .toDate();
+
     console.log(data);
+
+    if (task?._id) {
+      console.log('exitent');
+    } else {
+      console.log('non existent');
+    }
   });
 
   const handleResponsibleChange = (selectedUser: IUser[]) => {
@@ -85,6 +98,8 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
       return;
 
     setSelectedKeywords([...selectedKeywords!, selectedKeyword[0]]);
+
+    (typeaheadKeywords.current as any).clear();
   };
 
   const removeKeywordFromSelectedOnes = (keywordToRemove: string) => {
@@ -114,14 +129,11 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
           }
         />
         <Typeahead
-          options={people}
+          options={people || []}
           labelKey="emailAddress"
           id="people-typeahead-form"
           emptyLabel="Nenhuma pessoa encontrada."
           onChange={handleResponsibleChange}
-          className={classNames({
-            'is-invalid': errors.responsible,
-          })}
           renderMenuItemChildren={(option: IUser) => (
             <div>
               <div>{option.firstName + ' ' + option.lastName}</div>
@@ -163,14 +175,13 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
           ))}
         </div>
         <Typeahead
-          options={keywords}
-          labelKey="keywords"
+          ref={typeaheadKeywords as any}
+          options={(keywords || []).filter(
+            kw => !selectedKeywords.includes(kw)
+          )}
           id="keywords-typeahead-form"
           emptyLabel="Nenhuma palavra-chave encontrada."
           onChange={handleKeywordChange}
-          className={classNames({
-            'is-invalid': errors.keywords,
-          })}
           renderMenuItemChildren={(option: string) => (
             <div>
               <div>{option}</div>
@@ -211,6 +222,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
               required: false,
             }) as RBRef
           }
+          min={moment(new Date()).format('YYYY-MM-DDTHH:mm')}
         />
       </Form.Group>
       <Button type="submit" variant="success" block>
