@@ -123,6 +123,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
                   <TaskEdit
                     taskId={task._id}
                     projectId={(task.project as IProject)._id}
+                    onSuccess={props.updateFunc}
                   />
                 )
               }

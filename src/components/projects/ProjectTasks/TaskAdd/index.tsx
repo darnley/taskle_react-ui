@@ -2,7 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ITask } from '../../../../interfaces/ITask';
 import { useForm } from 'react-hook-form';
 import IFormDataAddTask from '../../../../interfaces/forms/IFormDataAddTask';
-import { getTask } from '../../../../services/project/task';
+import {
+  getTask,
+  updateTask,
+  createTask,
+} from '../../../../services/project/task';
 import { Form, Button, Badge, FormControl } from 'react-bootstrap';
 import classNames from 'classnames';
 import RBRef from '../../../../types/RBRef';
@@ -16,10 +20,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import './styles.scss';
 import moment from 'moment';
+import { useToasts } from 'react-toast-notifications';
 
 export interface ITaskEditProps {
-  projectId?: string;
+  projectId: string;
   taskId?: string;
+  onSuccess?: () => void;
 }
 
 const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
@@ -30,6 +36,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [keywords, setKeywords] = useState<string[]>([]);
   const typeaheadKeywords = useRef<Typeahead<TypeaheadModel>>();
+  const { addToast } = useToasts();
 
   useEffect(() => {
     if (props.projectId && props.taskId) {
@@ -37,7 +44,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
         .then(task => {
           setTask(task);
           setSelectedKeywords(task.keywords);
-          setSelectedResponsible(task.responsible);
+          if (task.responsible) setSelectedResponsible(task.responsible);
         })
         .catch(err => {
           console.error(err);
@@ -68,11 +75,8 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
       _id: props.projectId!,
     } as IProject;
 
-    data.responsible = {
-      _id: (data as any).responsibleTemp,
-    } as IUser;
-
-    delete (data as any).responsibleTemp;
+    if (selectedResponsible) data.responsible = selectedResponsible;
+    else data.responsible = null;
 
     data.keywords = selectedKeywords!;
 
@@ -85,13 +89,43 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
 
     if (task?._id) {
       console.log('exitent');
+      updateTask(props.projectId!, props.taskId!, data)
+        .then(() => {
+          addToast('Tarefa alterada com sucesso', { appearance: 'success' });
+          if (props.onSuccess) props.onSuccess();
+        })
+        .catch(err =>
+          addToast(
+            <>
+              Ocorreu um erro ao alterar a tarefa
+              <p>
+                <small>{err.message}</small>
+              </p>
+            </>,
+            {
+              appearance: 'error',
+            }
+          )
+        );
     } else {
       console.log('non existent');
+      createTask(props.projectId, data)
+        .then(res => {
+          addToast('Tarefa foi adicionada com sucesso', {
+            appearance: 'success',
+          });
+          if (props.onSuccess) props.onSuccess();
+        })
+        .catch(err =>
+          addToast('Ocorreu um erro ao adicionar a tarefa', {
+            appearance: 'error',
+          })
+        );
     }
   });
 
   const handleResponsibleChange = (selectedUser: IUser[]) => {
-    setSelectedResponsible(selectedUser[0]);
+    setSelectedResponsible(selectedUser[0] || undefined);
   };
 
   const handleKeywordChange = (selectedKeyword: string[]) => {
@@ -120,6 +154,43 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
     }
   };
 
+  const handleDeliverDateChange = (
+    event: React.FormEvent<FormControl & HTMLInputElement>
+  ) => {
+    if (!event.currentTarget.value) return;
+    event.preventDefault();
+    const currentValue = event.currentTarget.value;
+    const dateValue = moment(currentValue).toDate();
+
+    if (task && dateValue) {
+      setTask(
+        prevTask =>
+          ({
+            ...prevTask,
+            deliveryDate: dateValue,
+          } as ITask)
+      );
+    }
+  };
+
+  const handleDescriptionChange = (
+    event: React.FormEvent<FormControl & HTMLInputElement>
+  ) => {
+    if (!event.currentTarget.value) return;
+    event.preventDefault();
+    const currentValue = event.currentTarget.value;
+
+    if (task) {
+      setTask(
+        prevTask =>
+          ({
+            ...prevTask,
+            description: currentValue,
+          } as ITask)
+      );
+    }
+  };
+
   const removeKeywordFromSelectedOnes = (keywordToRemove: string) => {
     const foundIndex = selectedKeywords.findIndex(
       keyword => keyword === keywordToRemove
@@ -136,23 +207,15 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
     <Form onSubmit={onSubmit}>
       <Form.Group controlId="responsible">
         <Form.Label>Responsável</Form.Label>
-        <Form.Control
-          type="hidden"
-          name="responsibleTemp"
-          value={selectedResponsible?._id}
-          ref={
-            register({
-              required: true,
-            }) as RBRef
-          }
-        />
         <Typeahead
           options={people || []}
           labelKey="emailAddress"
           id="people-typeahead-form"
+          paginate={false}
+          clearButton
           selected={
             selectedResponsible
-              ? [people?.find(p => p._id === selectedResponsible?._id) as IUser]
+              ? people?.filter(p => p._id === selectedResponsible._id)
               : undefined
           }
           emptyLabel="Nenhuma pessoa encontrada."
@@ -176,9 +239,10 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
           ref={
             register({
               required: true,
+              minLength: 20,
             }) as RBRef
           }
-          onChange={e => null}
+          onChange={handleDescriptionChange}
           value={task?.description}
           autoComplete="off"
           autoCorrect="off"
@@ -239,7 +303,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
       <Form.Group controlId="deliveryDate">
         <Form.Label>Data de entrega</Form.Label>
         <Form.Control
-          type="datetime-local"
+          type="date"
           name="deliveryDate"
           className={classNames({
             'is-invalid': errors.deliveryDate,
@@ -247,14 +311,16 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
           ref={
             register({
               required: false,
+              min: moment(task?.deliveryDate || new Date()).format(
+                'YYYY-MM-DD'
+              ),
             }) as RBRef
           }
-          onChange={e => null}
-          value={moment(task?.deliveryDate).format('YYYY-MM-DDTHH:mm')}
-          min={
+          onChange={handleDeliverDateChange}
+          value={
             task?.deliveryDate
-              ? moment(task?.deliveryDate).format('YYYY-MM-DDTHH:mm')
-              : moment(new Date()).format('YYYY-MM-DDTHH:mm')
+              ? moment(task?.deliveryDate).format('YYYY-MM-DD')
+              : undefined
           }
         />
       </Form.Group>

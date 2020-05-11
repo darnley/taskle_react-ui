@@ -39,3 +39,12 @@ export function getTask(projectId: string, taskId: string) {
       });
   });
 }
+
+export function createTask(projectId: string, task: ITask) {
+  return new Promise<ITask>((resolve, reject) => {
+    authenticatedAxios
+      .post<ITask>(`/projects/${projectId}/tasks`, task)
+      .then(res => resolve(res.data))
+      .catch(err => reject(err));
+  });
+}

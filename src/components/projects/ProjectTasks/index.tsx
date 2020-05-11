@@ -21,15 +21,18 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
   const sidebarContext = useContext(SidebarContext);
 
   useEffect(() => {
-    getAllTasks(new String(projectId).toString()).then(res => {
+    getAllTasks(projectId!.toString()).then(res => {
       setTasks(res);
     });
   }, [projectId]);
 
   const updateTaskList = () => {
-    getAllTasks(new String(projectId).toString()).then(res => {
+    console.log('Updating task list...');
+    getAllTasks(projectId!.toString()).then(res => {
+      setTasks([]);
       setTasks(res);
     });
+    sidebarContext.removeSidebarComponent();
   };
 
   return (
@@ -39,7 +42,7 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
           variant="primary"
           onClick={() =>
             sidebarContext.setSidebarComponent(
-              <TaskAdd projectId={projectId} />
+              <TaskAdd projectId={projectId!} onSuccess={updateTaskList} />
             )
           }
         >
