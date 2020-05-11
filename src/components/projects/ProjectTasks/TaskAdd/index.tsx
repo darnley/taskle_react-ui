@@ -21,6 +21,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import './styles.scss';
 import moment from 'moment';
 import { useToasts } from 'react-toast-notifications';
+import { parseKeyword } from '../../../../utils/keyword';
 
 export interface ITaskEditProps {
   projectId: string;
@@ -37,6 +38,10 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   const [keywords, setKeywords] = useState<string[]>([]);
   const typeaheadKeywords = useRef<Typeahead<TypeaheadModel>>();
   const { addToast } = useToasts();
+  const [
+    isKeywordManuallyAddedToArray,
+    setIsKeywordManuallyAddedToArray,
+  ] = useState(false);
 
   useEffect(() => {
     if (props.projectId && props.taskId) {
@@ -78,7 +83,9 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
     if (selectedResponsible) data.responsible = selectedResponsible;
     else data.responsible = null;
 
-    data.keywords = selectedKeywords!;
+    data.keywords = selectedKeywords.filter(
+      (v, i) => selectedKeywords.indexOf(v) === i
+    );
 
     if (data.deliveryDate)
       data.deliveryDate = moment(data.deliveryDate)
@@ -129,12 +136,29 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   };
 
   const handleKeywordChange = (selectedKeyword: string[]) => {
-    if (!selectedKeyword[0] || selectedKeywords.includes(selectedKeyword[0]))
-      return;
+    const inputWord = parseKeyword(selectedKeyword[0]);
 
-    setSelectedKeywords([...selectedKeywords!, selectedKeyword[0]]);
+    if (!selectedKeyword[0] || selectedKeywords.includes(inputWord)) return;
+
+    setSelectedKeywords([...selectedKeywords!, inputWord]);
 
     (typeaheadKeywords.current as any).clear();
+  };
+
+  const hangleKeywordInputchange = (input: string, e: Event) => {
+    e.preventDefault();
+
+    if (isKeywordManuallyAddedToArray) {
+      let previousArray = keywords;
+      previousArray.splice(previousArray.length - 1, 1);
+      setKeywords(previousArray);
+    }
+
+    if (!keywords.includes(input.toLowerCase())) {
+      const inputWord = input.toLowerCase();
+      setKeywords([...keywords, inputWord]);
+      setIsKeywordManuallyAddedToArray(true);
+    }
   };
 
   const handleComplexityChange = (
@@ -271,6 +295,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
           id="keywords-typeahead-form"
           emptyLabel="Nenhuma palavra-chave encontrada."
           onChange={handleKeywordChange}
+          onInputChange={hangleKeywordInputchange}
           renderMenuItemChildren={(option: string) => (
             <div>
               <div>{option}</div>
