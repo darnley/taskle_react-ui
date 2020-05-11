@@ -3,7 +3,7 @@ import { ITask } from '../../../../interfaces/ITask';
 import { useForm } from 'react-hook-form';
 import IFormDataAddTask from '../../../../interfaces/forms/IFormDataAddTask';
 import { getTask } from '../../../../services/project/task';
-import { Form, Button, Badge } from 'react-bootstrap';
+import { Form, Button, Badge, FormControl } from 'react-bootstrap';
 import classNames from 'classnames';
 import RBRef from '../../../../types/RBRef';
 import { IUser } from '../../../../interfaces/IUser';
@@ -37,6 +37,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
         .then(task => {
           setTask(task);
           setSelectedKeywords(task.keywords);
+          setSelectedResponsible(task.responsible);
         })
         .catch(err => {
           console.error(err);
@@ -102,6 +103,23 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
     (typeaheadKeywords.current as any).clear();
   };
 
+  const handleComplexityChange = (
+    event: React.FormEvent<FormControl & HTMLInputElement>
+  ) => {
+    event.preventDefault();
+    const currentValue = event.currentTarget.value as TaskComplexity;
+
+    if (task) {
+      setTask(
+        prevTask =>
+          ({
+            ...prevTask,
+            complexity: currentValue,
+          } as ITask)
+      );
+    }
+  };
+
   const removeKeywordFromSelectedOnes = (keywordToRemove: string) => {
     const foundIndex = selectedKeywords.findIndex(
       keyword => keyword === keywordToRemove
@@ -132,6 +150,11 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
           options={people || []}
           labelKey="emailAddress"
           id="people-typeahead-form"
+          selected={
+            selectedResponsible
+              ? [people?.find(p => p._id === selectedResponsible?._id) as IUser]
+              : undefined
+          }
           emptyLabel="Nenhuma pessoa encontrada."
           onChange={handleResponsibleChange}
           renderMenuItemChildren={(option: IUser) => (
@@ -155,6 +178,8 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
               required: true,
             }) as RBRef
           }
+          onChange={e => null}
+          value={task?.description}
           autoComplete="off"
           autoCorrect="off"
         />
@@ -203,6 +228,8 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
             }) as RBRef
           }
           custom
+          value={task?.complexity}
+          onChange={handleComplexityChange}
         >
           <option value={TaskComplexity.Low}>Baixa</option>
           <option value={TaskComplexity.Medium}>Média</option>
@@ -222,7 +249,13 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
               required: false,
             }) as RBRef
           }
-          min={moment(new Date()).format('YYYY-MM-DDTHH:mm')}
+          onChange={e => null}
+          value={moment(task?.deliveryDate).format('YYYY-MM-DDTHH:mm')}
+          min={
+            task?.deliveryDate
+              ? moment(task?.deliveryDate).format('YYYY-MM-DDTHH:mm')
+              : moment(new Date()).format('YYYY-MM-DDTHH:mm')
+          }
         />
       </Form.Group>
       <Button type="submit" variant="success" block>
