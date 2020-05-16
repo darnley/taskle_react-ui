@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-interface ICreateProjectProps {}
+export interface ICreateProjectProps {}
 
 const CreateProject: FunctionComponent<ICreateProjectProps> = props => {
   return <div>Criar projeto - sidebar</div>;
