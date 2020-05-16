@@ -3,11 +3,15 @@ import noFillSvg from './svg/task_ellipse_nofill.svg';
 import fillSvg from './svg/task_ellipse_fill.svg';
 import fullFillSvg from './svg/task_ellipse_fullfill.svg';
 import TaskStatus from '../../../enums/TaskStatus';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import './styles.scss';
 
 export interface ITaskStatusIconProps {
   status: TaskStatus;
   width?: string;
   height?: string;
+  showAsMyTasks?: boolean;
 }
 
 const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
@@ -52,7 +56,20 @@ const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
     }
   };
 
-  return <>{getCurrentTaskIcon(props.status, props.width, props.height)}</>;
+  return (
+    <>
+      {getCurrentTaskIcon(props.status, props.width, props.height)}
+      {props.showAsMyTasks && (
+        <div
+          className={`finish-button ${
+            props.status === TaskStatus.Finished ? 'finished' : 'not-finished'
+          }`}
+        >
+          <FontAwesomeIcon icon={faCheck} className="ml-3 mr-1" />
+        </div>
+      )}
+    </>
+  );
 };
 
 export default TaskStatusIcon;

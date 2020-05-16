@@ -12,6 +12,7 @@ import { faCalendarAlt } from '@fortawesome/free-regular-svg-icons';
 import Task from './Task';
 import SidebarContext from '../../../contexts/SidebarContext';
 import TaskAdd from './TaskAdd';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export interface IProjectTasksProps {}
 
@@ -38,16 +39,18 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
   return (
     <Container fluid>
       <Row className="project-tasks-menu">
-        <Button
-          variant="primary"
-          onClick={() =>
-            sidebarContext.setSidebarComponent(
-              <TaskAdd projectId={projectId!} onSuccess={updateTaskList} />
-            )
-          }
-        >
-          Criar nova tarefa
-        </Button>
+        <div className="text-right w-100">
+          <Button
+            variant="primary"
+            onClick={() =>
+              sidebarContext.setSidebarComponent(
+                <TaskAdd projectId={projectId!} onSuccess={updateTaskList} />
+              )
+            }
+          >
+            <FontAwesomeIcon icon={faPlus} className="mr-1" /> Criar nova tarefa
+          </Button>
+        </div>
       </Row>
       <Row className="project-tasks-list mt-3">
         {tasks?.map(task => (

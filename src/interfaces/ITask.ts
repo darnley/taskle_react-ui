@@ -9,7 +9,7 @@ export interface ITask {
   keywords: string[];
   milestone: string;
   status: TaskStatus;
-  project: IProject | string;
+  project: IProject;
   responsible?: IUser | null;
   complexity: TaskComplexity;
   deliveryDate?: Date;

@@ -229,130 +229,132 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
 
   return (
     <Form onSubmit={onSubmit}>
-      <Form.Group controlId="responsible">
-        <Form.Label>Responsável</Form.Label>
-        <Typeahead
-          options={people || []}
-          labelKey="emailAddress"
-          id="people-typeahead-form"
-          paginate={false}
-          clearButton
-          selected={
-            selectedResponsible
-              ? people?.filter(p => p._id === selectedResponsible._id)
-              : undefined
-          }
-          emptyLabel="Nenhuma pessoa encontrada."
-          onChange={handleResponsibleChange}
-          renderMenuItemChildren={(option: IUser) => (
-            <div>
-              <div>{option.firstName + ' ' + option.lastName}</div>
-              <small className="text-muted">{option.emailAddress}</small>
-            </div>
-          )}
-        ></Typeahead>
-      </Form.Group>
-      <Form.Group controlId="description">
-        <Form.Label>Descrição</Form.Label>
-        <Form.Control
-          as="textarea"
-          name="description"
-          className={classNames({
-            'is-invalid': errors.description,
-          })}
-          ref={
-            register({
-              required: true,
-              minLength: 20,
-            }) as RBRef
-          }
-          onChange={handleDescriptionChange}
-          value={task?.description}
-          autoComplete="off"
-          autoCorrect="off"
-        />
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Palavras-chave</Form.Label>
-        <div className="mb-2 add-task-keywords">
-          {selectedKeywords.map((keyword, index) => (
-            <Badge variant="secondary" className="mr-1" key={keyword}>
-              {keyword}{' '}
-              <span
-                className="times-icon"
-                onClick={() => removeKeywordFromSelectedOnes(keyword)}
-              >
-                <FontAwesomeIcon icon={faTimes} />
-              </span>
-            </Badge>
-          ))}
-        </div>
-        <Typeahead
-          ref={typeaheadKeywords as any}
-          options={(keywords || []).filter(
-            kw => !selectedKeywords.includes(kw)
-          )}
-          id="keywords-typeahead-form"
-          emptyLabel="Nenhuma palavra-chave encontrada."
-          onChange={handleKeywordChange}
-          onInputChange={hangleKeywordInputchange}
-          renderMenuItemChildren={(option: string) => (
-            <div>
-              <div>{option}</div>
-            </div>
-          )}
-        />
-      </Form.Group>
-      <Form.Group controlId="complexity">
-        <Form.Label>Complexidade</Form.Label>
-        <Form.Control
-          as="select"
-          name="complexity"
-          className={classNames({
-            'is-invalid': errors.complexity,
-          })}
-          ref={
-            register({
-              required: true,
-            }) as RBRef
-          }
-          custom
-          value={task?.complexity}
-          onChange={handleComplexityChange}
-        >
-          <option value={TaskComplexity.Low}>Baixa</option>
-          <option value={TaskComplexity.Medium}>Média</option>
-          <option value={TaskComplexity.High}>Alta</option>
-        </Form.Control>
-      </Form.Group>
-      <Form.Group controlId="deliveryDate">
-        <Form.Label>Data de entrega</Form.Label>
-        <Form.Control
-          type="date"
-          name="deliveryDate"
-          className={classNames({
-            'is-invalid': errors.deliveryDate,
-          })}
-          ref={
-            register({
-              required: false,
-              min: moment(task?.deliveryDate || new Date()).format(
-                'YYYY-MM-DD'
-              ),
-            }) as RBRef
-          }
-          onChange={handleDeliverDateChange}
-          value={
-            task?.deliveryDate
-              ? moment(task?.deliveryDate).format('YYYY-MM-DD')
-              : undefined
-          }
-        />
-      </Form.Group>
-      <Button type="submit" variant="success" block>
-        {props.taskId && 'Editar tarefa'}
-        {!props.taskId && 'Criar tarefa'}
-      </Button>
+      <fieldset>
+        <Form.Group controlId="responsible">
+          <Form.Label>Responsável</Form.Label>
+          <Typeahead
+            options={people || []}
+            labelKey="emailAddress"
+            id="people-typeahead-form"
+            paginate={false}
+            clearButton
+            selected={
+              selectedResponsible
+                ? people?.filter(p => p._id === selectedResponsible._id)
+                : undefined
+            }
+            emptyLabel="Nenhuma pessoa encontrada."
+            onChange={handleResponsibleChange}
+            renderMenuItemChildren={(option: IUser) => (
+              <div>
+                <div>{option.firstName + ' ' + option.lastName}</div>
+                <small className="text-muted">{option.emailAddress}</small>
+              </div>
+            )}
+          ></Typeahead>
+        </Form.Group>
+        <Form.Group controlId="description">
+          <Form.Label>Descrição</Form.Label>
+          <Form.Control
+            as="textarea"
+            name="description"
+            className={classNames({
+              'is-invalid': errors.description,
+            })}
+            ref={
+              register({
+                required: true,
+                minLength: 20,
+              }) as RBRef
+            }
+            onChange={handleDescriptionChange}
+            value={task?.description}
+            autoComplete="off"
+            autoCorrect="off"
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Palavras-chave</Form.Label>
+          <div className="mb-2 add-task-keywords">
+            {selectedKeywords.map((keyword, index) => (
+              <Badge variant="secondary" className="mr-1" key={keyword}>
+                {keyword}{' '}
+                <span
+                  className="times-icon"
+                  onClick={() => removeKeywordFromSelectedOnes(keyword)}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </span>
+              </Badge>
+            ))}
+          </div>
+          <Typeahead
+            ref={typeaheadKeywords as any}
+            options={(keywords || []).filter(
+              kw => !selectedKeywords.includes(kw)
+            )}
+            id="keywords-typeahead-form"
+            emptyLabel="Nenhuma palavra-chave encontrada."
+            onChange={handleKeywordChange}
+            onInputChange={hangleKeywordInputchange}
+            renderMenuItemChildren={(option: string) => (
+              <div>
+                <div>{option}</div>
+              </div>
+            )}
+          />
+        </Form.Group>
+        <Form.Group controlId="complexity">
+          <Form.Label>Complexidade</Form.Label>
+          <Form.Control
+            as="select"
+            name="complexity"
+            className={classNames({
+              'is-invalid': errors.complexity,
+            })}
+            ref={
+              register({
+                required: true,
+              }) as RBRef
+            }
+            custom
+            value={task?.complexity}
+            onChange={handleComplexityChange}
+          >
+            <option value={TaskComplexity.Low}>Baixa</option>
+            <option value={TaskComplexity.Medium}>Média</option>
+            <option value={TaskComplexity.High}>Alta</option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="deliveryDate">
+          <Form.Label>Data de entrega</Form.Label>
+          <Form.Control
+            type="date"
+            name="deliveryDate"
+            className={classNames({
+              'is-invalid': errors.deliveryDate,
+            })}
+            ref={
+              register({
+                required: false,
+                min: moment(task?.deliveryDate || new Date()).format(
+                  'YYYY-MM-DD'
+                ),
+              }) as RBRef
+            }
+            onChange={handleDeliverDateChange}
+            value={
+              task?.deliveryDate
+                ? moment(task?.deliveryDate).format('YYYY-MM-DD')
+                : undefined
+            }
+          />
+        </Form.Group>
+        <Button type="submit" variant="success" block>
+          {props.taskId && 'Editar tarefa'}
+          {!props.taskId && 'Criar tarefa'}
+        </Button>
+      </fieldset>
     </Form>
   );
 };

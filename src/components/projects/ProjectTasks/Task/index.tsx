@@ -6,7 +6,11 @@ import TaskComplexityIcon from '../../../icons/TaskComplexityIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Moment from 'react-moment';
 import { faCalendarAlt } from '@fortawesome/free-regular-svg-icons';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faUser,
+  faLink,
+  faExternalLinkAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import './styles.scss';
 import UserInfoContext, {
   IUserInfoContext,
@@ -16,10 +20,12 @@ import IProject from '../../../../interfaces/IProject';
 import { useToasts } from 'react-toast-notifications';
 import SidebarContext from '../../../../contexts/SidebarContext';
 import TaskEdit from '../TaskAdd';
+import { Link } from 'react-router-dom';
 
 export interface ITaskProps {
   task: ITask;
   updateFunc: () => void;
+  showAsMyTasks?: boolean;
 }
 
 const Task: React.FunctionComponent<ITaskProps> = props => {
@@ -34,8 +40,6 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
 
       updateTask((innerTask.project as IProject)._id, innerTask._id, innerTask)
         .then(res => {
-          console.log('ok');
-
           setTask(innerTask);
 
           if (props.updateFunc) {
@@ -60,11 +64,28 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
             sm={1}
             className="d-flex align-items-center justify-content-center"
           >
-            <TaskStatusIcon status={task.status} width="30em" />
+            <TaskStatusIcon
+              status={task.status}
+              width="30em"
+              showAsMyTasks={props.showAsMyTasks}
+            />
           </Col>
           <Col md={8} className="project-task-middle-data">
             <Row className="project-task-top">
-              <TaskComplexityIcon complexity={task.complexity} width="30em" />
+              <span className="task-complexity">
+                <TaskComplexityIcon complexity={task.complexity} width="30em" />
+              </span>
+              {props.showAsMyTasks && (
+                <span className="ml-2 task-project-description text-muted">
+                  <Link to={`/projects/${task.project._id}`}>
+                    {task.project.description}{' '}
+                    <FontAwesomeIcon
+                      className="ml-1"
+                      icon={faExternalLinkAlt}
+                    />
+                  </Link>
+                </span>
+              )}
             </Row>
             <Row className="project-task-description mt-2">
               {task.description}

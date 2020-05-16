@@ -1,0 +1,26 @@
+$border-color-finished: #68ccb0;
+$border-color-not-finished: #cecece;
+$border-width: 1px;
+
+.finished {
+    border-top: solid $border-color-finished $border-width;
+    border-right: solid $border-color-finished $border-width;
+    border-bottom: solid $border-color-finished $border-width;
+    color: $border-color-finished;
+}
+
+.not-finished {
+    border-top: solid $border-color-not-finished $border-width;
+    border-right: solid $border-color-not-finished $border-width;
+    border-bottom: solid $border-color-not-finished $border-width;
+    color: $border-color-not-finished
+}
+
+.finish-button {
+    height: 30px;
+    position: relative;
+    left: -15px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+

@@ -18,6 +18,7 @@ import People from './components/organization/People';
 import Teams from './components/organization/Teams';
 import { ToastProvider } from 'react-toast-notifications';
 import ProjectTasks from './components/projects/ProjectTasks';
+import ProjectStats from './components/projects/ProjectStats';
 
 ReactDOM.render(
   <ToastProvider autoDismiss>
@@ -64,7 +65,13 @@ ReactDOM.render(
         <PrivateRoute
           path="/me/tasks"
           exact={true}
-          component={() => <App middleComponent={<MyTasks />} />}
+          component={() => (
+            <App
+              middleComponent={
+                <Page name="Minhas tarefas" children={<MyTasks />} tabs={[]} />
+              }
+            />
+          )}
         />
         <PrivateRoute
           path="/organization"
@@ -109,6 +116,12 @@ ReactDOM.render(
                       title="Tarefas"
                       key={1}
                       children={<ProjectTasks />}
+                    />,
+                    <Tab
+                      eventkey="project-stats"
+                      title="Estatísticas"
+                      key={2}
+                      children={<ProjectStats />}
                     />,
                   ]}
                 />
