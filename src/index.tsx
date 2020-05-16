@@ -6,7 +6,7 @@ import PrivateRoute from './components/authentication/PrivateRoute';
 import Login from './components/authentication/SignIn';
 import SignOut from './components/authentication/SignOut';
 import MyProjects from './components/me/MyProjects';
-import CreateProject from './components/me/MyProjects/CreateProject';
+import CreateOrEditProject from './components/me/MyProjects/CreateOrEditProject';
 import MyTasks from './components/me/MyTasks';
 import Test from './components/Test';
 import './index.scss';
@@ -58,7 +58,7 @@ ReactDOM.render(
           component={() => (
             <App
               middleComponent={<MyProjects />}
-              sidebarComponent={<CreateProject />}
+              sidebarComponent={<CreateOrEditProject />}
             />
           )}
         />

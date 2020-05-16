@@ -6,7 +6,7 @@ import ProjectItem from './ProjectItem';
 import { InputGroup, FormControl, Button, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import CreateProject from './CreateProject';
+import CreateOrEditProject from './CreateOrEditProject';
 
 interface IMyProjectsProps {}
 
@@ -34,7 +34,7 @@ const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
 
   const handleCreateProjectClick = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    sidebarContext.setSidebarComponent(<CreateProject />);
+    sidebarContext.setSidebarComponent(<CreateOrEditProject />);
   };
 
   useMemo(() => {
