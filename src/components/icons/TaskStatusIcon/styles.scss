@@ -24,3 +24,10 @@ $border-width: 1px;
     border-radius: 3px;
 }
 
+.button-task-finish {
+    z-index: 1000;
+}
+
+.button-task-toggle-status {
+    z-index: 1100;
+}

@@ -56,6 +56,14 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
     }
   };
 
+  const finishTask = () => {
+    return null;
+  };
+
+  const toggleTaskStatus = () => {
+    return null;
+  };
+
   return (
     <Card className="w-100 mt-2" key={task._id}>
       <Card.Body className="task-card">
@@ -68,6 +76,8 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
               status={task.status}
               width="30em"
               showAsMyTasks={props.showAsMyTasks}
+              onClickToggleTaskStatus={toggleTaskStatus}
+              onClickFinishTask={finishTask}
             />
           </Col>
           <Col md={8} className="project-task-middle-data">

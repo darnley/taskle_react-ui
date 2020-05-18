@@ -12,9 +12,27 @@ export interface ITaskStatusIconProps {
   width?: string;
   height?: string;
   showAsMyTasks?: boolean;
+  onClickToggleTaskStatus?: () => void;
+  onClickFinishTask?: () => void;
 }
 
 const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
+  const onClickIcon = () => {
+    if (props.onClickToggleTaskStatus === undefined) {
+      return;
+    }
+
+    props.onClickToggleTaskStatus();
+  };
+
+  const onClickFinish = () => {
+    if (props.onClickFinishTask === undefined) {
+      return;
+    }
+
+    props.onClickFinishTask();
+  };
+
   const getCurrentTaskIcon = (
     taskStatus: TaskStatus,
     width: string | undefined,
@@ -29,8 +47,10 @@ const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
           src={noFillSvg}
           alt="Tarefa não iniciada"
           title="Tarefa não iniciada"
+          className="button-task-toggle-status"
           width={innerWidth}
           height={innerHeight}
+          onClick={onClickIcon}
         />
       );
     } else if (taskStatus === TaskStatus.Started) {
@@ -39,8 +59,10 @@ const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
           src={fillSvg}
           alt="Tarefa iniciada"
           title="Tarefa iniciada"
+          className="button-task-toggle-status"
           width={innerWidth}
           height={innerHeight}
+          onClick={onClickIcon}
         />
       );
     } else if (taskStatus === TaskStatus.Finished) {
@@ -49,8 +71,10 @@ const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
           src={fullFillSvg}
           alt="Tarefa finalizada"
           title="Tarefa finalizada"
+          className="button-task-toggle-status"
           width={innerWidth}
           height={innerHeight}
+          onClick={onClickIcon}
         />
       );
     }
@@ -61,9 +85,10 @@ const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
       {getCurrentTaskIcon(props.status, props.width, props.height)}
       {props.showAsMyTasks && (
         <div
-          className={`finish-button ${
+          className={`button-task-finish finish-button ${
             props.status === TaskStatus.Finished ? 'finished' : 'not-finished'
           }`}
+          onClick={onClickFinish}
         >
           <FontAwesomeIcon icon={faCheck} className="ml-3 mr-1" />
         </div>
