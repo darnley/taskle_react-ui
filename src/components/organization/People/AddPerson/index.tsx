@@ -79,7 +79,7 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
         />
       </Form.Group>
       <Form.Group controlId="lastName">
-        <Form.Label>Primeiro nome</Form.Label>
+        <Form.Label>Último nome</Form.Label>
         <Form.Control
           type="text"
           name="lastName"
