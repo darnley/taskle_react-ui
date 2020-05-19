@@ -10,17 +10,26 @@ import {
   faUser,
   faLink,
   faExternalLinkAlt,
+  faEdit,
+  faPenSquare,
+  faPen,
+  faFlag,
 } from '@fortawesome/free-solid-svg-icons';
 import './styles.scss';
 import UserInfoContext, {
   IUserInfoContext,
 } from '../../../../contexts/UserInfoContext';
-import { updateTask } from '../../../../services/project/task';
+import {
+  updateTask,
+  getTask,
+  finishTask,
+} from '../../../../services/project/task';
 import IProject from '../../../../interfaces/IProject';
 import { useToasts } from 'react-toast-notifications';
 import SidebarContext from '../../../../contexts/SidebarContext';
 import TaskEdit from '../TaskAdd';
 import { Link } from 'react-router-dom';
+import TaskStatus from '../../../../enums/TaskStatus';
 
 export interface ITaskProps {
   task: ITask;
@@ -56,12 +65,54 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
     }
   };
 
-  const finishTask = () => {
-    return null;
+  const handleTaskFinishing = () => {
+    if (task.status === TaskStatus.Finished) {
+      return;
+    }
+
+    finishTask(task.project._id, task._id).then(currentTask => {
+      setTask({ ...currentTask, project: task.project });
+      addToast('A tarefa foi finalizada.', { appearance: 'success' });
+    });
   };
 
   const toggleTaskStatus = () => {
-    return null;
+    getTask(task.project._id, task._id)
+      .then(currentTask => {
+        if (currentTask.status === TaskStatus.NotStarted) {
+          currentTask.status = TaskStatus.Started;
+        } else if (currentTask.status === TaskStatus.Started) {
+          currentTask.status = TaskStatus.NotStarted;
+        } else if (currentTask.status === TaskStatus.Finished) {
+          currentTask.status = TaskStatus.Started;
+        }
+
+        updateTask(task.project._id, task._id, currentTask)
+          .then(() => {
+            currentTask.project = task.project;
+            setTask(currentTask);
+
+            addToast(
+              <span>
+                <i>Status</i> da tarefa foi alterado.
+              </span>,
+              { appearance: 'success' }
+            );
+          })
+          .catch(err => {
+            console.error(err);
+            addToast(
+              <span>
+                Ocorreu um erro ao atualizar o <i>status</i> da tarefa.
+              </span>,
+              { appearance: 'error' }
+            );
+          });
+      })
+      .catch(err => {
+        console.error(err);
+        addToast('Ocorreu um erro ao obter a tarefa.', { appearance: 'error' });
+      });
   };
 
   return (
@@ -69,7 +120,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
       <Card.Body className="task-card">
         <Row>
           <Col
-            sm={1}
+            sm={2}
             className="d-flex align-items-center justify-content-center"
           >
             <TaskStatusIcon
@@ -77,10 +128,10 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
               width="30em"
               showAsMyTasks={props.showAsMyTasks}
               onClickToggleTaskStatus={toggleTaskStatus}
-              onClickFinishTask={finishTask}
+              onClickFinishTask={handleTaskFinishing}
             />
           </Col>
-          <Col md={8} className="project-task-middle-data">
+          <Col md={7} className="project-task-middle-data">
             <Row className="project-task-top">
               <span className="task-complexity">
                 <TaskComplexityIcon complexity={task.complexity} width="30em" />
@@ -144,11 +195,29 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
               </span>
             </Row>
           </Col>
-          <Col
-            md={3}
-            className="d-flex align-items-center justify-content-center"
-          >
-            <span
+          <Col md={3} className="align-items-center justify-content-center">
+            <Button
+              variant="outline-primary"
+              onClick={() =>
+                sidebarContext.setSidebarComponent(
+                  <TaskEdit
+                    taskId={task._id}
+                    projectId={(task.project as IProject)._id}
+                    onSuccess={props.updateFunc}
+                  />
+                )
+              }
+              className="h-100 float-right"
+              title="Editar a tarefa"
+            >
+              <FontAwesomeIcon icon={faPen} />
+            </Button>
+            {!props.showAsMyTasks && (
+              <Button variant="link" className="h-100 float-right mr-1">
+                <FontAwesomeIcon icon={faFlag} />
+              </Button>
+            )}
+            {/* <span
               onClick={() =>
                 sidebarContext.setSidebarComponent(
                   <TaskEdit
@@ -159,8 +228,8 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
                 )
               }
             >
-              Visualizar
-            </span>
+              <Button>Ver</Button>
+            </span> */}
           </Col>
         </Row>
       </Card.Body>

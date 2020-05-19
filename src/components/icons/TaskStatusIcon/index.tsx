@@ -90,7 +90,7 @@ const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
           }`}
           onClick={onClickFinish}
         >
-          <FontAwesomeIcon icon={faCheck} className="ml-3 mr-1" />
+          <FontAwesomeIcon icon={faCheck} className="finish-icon ml-4 mr-1" />
         </div>
       )}
     </>

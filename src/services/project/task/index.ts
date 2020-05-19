@@ -48,3 +48,12 @@ export function createTask(projectId: string, task: ITask) {
       .catch(err => reject(err));
   });
 }
+
+export function finishTask(projectId: string, taskId: string) {
+  return new Promise<ITask>((resolve, reject) => {
+    authenticatedAxios
+      .patch<ITask>(`/projects/${projectId}/tasks/${taskId}/finish`)
+      .then(res => resolve(res.data))
+      .catch(err => reject(err));
+  });
+}
