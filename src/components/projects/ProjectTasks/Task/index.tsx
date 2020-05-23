@@ -6,6 +6,7 @@ import TaskComplexityIcon from '../../../icons/TaskComplexityIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Moment from 'react-moment';
 import { faCalendarAlt } from '@fortawesome/free-regular-svg-icons';
+import classNames from 'classnames';
 import {
   faUser,
   faLink,
@@ -65,12 +66,24 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
     }
   };
 
+  const toggleTaskFlag = () => {
+    getTask(task.project._id, task._id).then(currentTask => {
+      currentTask.isFlagged = !currentTask.isFlagged;
+
+      updateTask(task.project._id, task._id, currentTask).then(() => {
+        setTask(currentTask);
+      });
+    });
+  };
+
   const handleTaskFinishing = () => {
     if (task.status === TaskStatus.Finished) {
       return;
     }
 
     finishTask(task.project._id, task._id).then(currentTask => {
+      currentTask.status = TaskStatus.Finished;
+
       setTask({ ...currentTask, project: task.project });
       addToast('A tarefa foi finalizada.', { appearance: 'success' });
     });
@@ -116,7 +129,14 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
   };
 
   return (
-    <Card className="w-100 mt-2" key={task._id}>
+    <Card
+      className={classNames({
+        'w-100': true,
+        'mt-2': true,
+        'task-flagged': task.isFlagged,
+      })}
+      key={task._id}
+    >
       <Card.Body className="task-card">
         <Row>
           <Col
@@ -213,23 +233,16 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
               <FontAwesomeIcon icon={faPen} />
             </Button>
             {!props.showAsMyTasks && (
-              <Button variant="link" className="h-100 float-right mr-1">
+              <Button
+                variant="link"
+                onClick={toggleTaskFlag}
+                className={`h-100 float-right mr-1 task-flag${
+                  task.isFlagged ? ' task-is-flagged' : ' task-is-not-flagged'
+                }`}
+              >
                 <FontAwesomeIcon icon={faFlag} />
               </Button>
             )}
-            {/* <span
-              onClick={() =>
-                sidebarContext.setSidebarComponent(
-                  <TaskEdit
-                    taskId={task._id}
-                    projectId={(task.project as IProject)._id}
-                    onSuccess={props.updateFunc}
-                  />
-                )
-              }
-            >
-              <Button>Ver</Button>
-            </span> */}
           </Col>
         </Row>
       </Card.Body>

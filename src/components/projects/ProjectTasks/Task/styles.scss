@@ -21,7 +21,31 @@
     padding: .5rem;
 }
 
+.task-flagged {
+    border-left: solid #e94343 0.5em;
+}
+
 .no-date {
     font-size: 8pt;
     color: #bebebe;
+}
+
+.task-is-flagged {
+    color: #f96363;
+}
+
+.task-flag {
+    font-size: 16pt;
+}
+
+.task-is-flagged:hover {
+    color: #fb4c4c;
+}
+
+.task-is-not-flagged {
+    color: #adadad;
+}
+
+.task-is-not-flagged:hover {
+    color: #888888;
 }
