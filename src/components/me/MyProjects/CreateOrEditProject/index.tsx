@@ -20,12 +20,17 @@ import RBRef from '../../../../types/RBRef';
 import IFormDataAddProject from '../../../../interfaces/forms/IFormDataAddProject';
 import { parseKeyword } from '../../../../utils/keyword';
 import IProject, { IProjectVisibility } from '../../../../interfaces/IProject';
-import { getProject, addProject } from '../../../../services/project';
+import {
+  getProject,
+  addProject,
+  updateProject,
+} from '../../../../services/project';
 import ITeam from '../../../../interfaces/ITeam';
 import { getAllTeams } from '../../../../services/team';
 
 export interface ICreateProjectProps {
   projectId?: string;
+  onSuccess?: () => void;
 }
 
 interface IVisibility {
@@ -68,6 +73,14 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
 
           if (project.visibility.teams) {
             setSelectedTeams(project.visibility.teams as ITeam[]);
+          }
+
+          if (project.keywords) {
+            setSelectedKeywords(project.keywords);
+          }
+
+          if (project.manager) {
+            setSelectedResponsible(project.manager as IUser);
           }
         })
         .catch(err => {
@@ -136,7 +149,7 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
           appearance: 'error',
         });
       });
-  }, [addToast, props.projectId, selectedTeams]);
+  }, [addToast, props.projectId]);
 
   useMemo(() => {
     setSelectedVisibility(previousVisibility =>
@@ -208,6 +221,34 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
       addProject(data)
         .then(res => {
           addToast('Projeto adicionado com sucesso', { appearance: 'success' });
+
+          if (props.onSuccess !== undefined) {
+            props.onSuccess();
+          }
+        })
+        .catch(err => {
+          addToast(
+            <>
+              Ocorreu um erro ao criar o projeto
+              <p>
+                <small>{err.message}</small>
+              </p>
+            </>,
+            {
+              appearance: 'error',
+            }
+          );
+        });
+    } else {
+      delete data._id;
+
+      updateProject(props.projectId, data)
+        .then(res => {
+          addToast('Projeto alterado com sucesso', { appearance: 'success' });
+
+          if (props.onSuccess !== undefined) {
+            props.onSuccess();
+          }
         })
         .catch(err => {
           addToast(
@@ -299,6 +340,24 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
     }
   };
 
+  const handleDescriptionChange = (
+    event: React.FormEvent<FormControl & HTMLInputElement>
+  ) => {
+    if (!event.currentTarget.value) return;
+    event.preventDefault();
+    const currentValue = event.currentTarget.value;
+
+    if (project) {
+      setProject(
+        prevProject =>
+          ({
+            ...prevProject,
+            description: currentValue,
+          } as IProject)
+      );
+    }
+  };
+
   const removeKeywordFromSelectedOnes = (keywordToRemove: string) => {
     const foundIndex = selectedKeywords.findIndex(
       keyword => keyword === keywordToRemove
@@ -362,9 +421,9 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
           ></Typeahead>
         </Form.Group>
         <Form.Group controlId="name">
-          <Form.Label>Descrição</Form.Label>
+          <Form.Label>Nome</Form.Label>
           <Form.Control
-            as="textarea"
+            type="text"
             name="name"
             className={classNames({
               'is-invalid': errors.name,
@@ -377,6 +436,26 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
             }
             onChange={handleNameChange}
             value={project?.name}
+            autoComplete="off"
+            autoCorrect="off"
+          />
+        </Form.Group>
+        <Form.Group controlId="description">
+          <Form.Label>Descrição</Form.Label>
+          <Form.Control
+            as="textarea"
+            name="name"
+            className={classNames({
+              'is-invalid': errors.description,
+            })}
+            ref={
+              register({
+                required: true,
+                minLength: 20,
+              }) as RBRef
+            }
+            onChange={handleDescriptionChange}
+            value={project?.description}
             autoComplete="off"
             autoCorrect="off"
           />

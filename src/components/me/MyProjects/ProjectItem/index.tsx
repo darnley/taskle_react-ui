@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import IProject from '../../../../interfaces/IProject';
 import { Card, Col, Row, Button } from 'react-bootstrap';
 import './styles.scss';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faEye } from '@fortawesome/free-solid-svg-icons';
+import UserInfoContext from '../../../../contexts/UserInfoContext';
+import SidebarContext from '../../../../contexts/SidebarContext';
+import CreateOrEditProject from '../CreateOrEditProject';
 
 export interface IProjectItemProps {
   project: IProject;
 }
 
 const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
+  const sidebarContext = useContext(SidebarContext);
+
+  const handleProjectEditClick = () => {
+    sidebarContext.removeSidebarComponent();
+    sidebarContext.setSidebarComponent(
+      <CreateOrEditProject
+        projectId={props.project._id}
+        onSuccess={onProjectCreateOrEdit}
+      />
+    );
+  };
+
+  const onProjectCreateOrEdit = () => {
+    sidebarContext.removeSidebarComponent();
+  };
+
   return (
     <div className="project-item">
       <Card>
@@ -43,6 +62,7 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
                 variant="outline-primary"
                 className="h-100 float-right"
                 title="Editar o projeto"
+                onClick={handleProjectEditClick}
               >
                 <FontAwesomeIcon icon={faPen} />
               </Button>
