@@ -30,3 +30,12 @@ export function updateProject(
       .catch(err => reject(err));
   });
 }
+
+export function getAllMilestones(projectId: string): Promise<string[]> {
+  return new Promise<string[]>((resolve, reject) => {
+    authenticatedAxios
+      .get<string[]>(`/projects/${projectId}/milestones`)
+      .then(res => resolve(res.data))
+      .catch(err => reject(err));
+  });
+}
