@@ -159,7 +159,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
               {props.showAsMyTasks && (
                 <span className="ml-2 task-project-description text-muted">
                   <Link to={`/projects/${task.project._id}`}>
-                    {task.project.description}{' '}
+                    {task.project.name}{' '}
                     <FontAwesomeIcon
                       className="ml-1"
                       icon={faExternalLinkAlt}
