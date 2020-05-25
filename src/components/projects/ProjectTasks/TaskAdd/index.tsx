@@ -95,6 +95,10 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   }, [props.projectId, props.taskId]);
 
   const onSubmit = handleSubmit(data => {
+    if (props.taskId) {
+      data = task!;
+    }
+
     data.project = {
       _id: props.projectId!,
     } as IProject;
