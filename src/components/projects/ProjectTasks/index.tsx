@@ -12,11 +12,21 @@ import { faCalendarAlt } from '@fortawesome/free-regular-svg-icons';
 import Task from './Task';
 import SidebarContext from '../../../contexts/SidebarContext';
 import TaskAdd from './TaskAdd';
-import { faPlus, faTag, faLink } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faTag,
+  faLink,
+  faPen,
+} from '@fortawesome/free-solid-svg-icons';
 import IMilestoneApi from '../../../interfaces/IMilestoneApi';
-import { getAllMilestones } from '../../../services/project';
+import { getAllMilestones, getProject } from '../../../services/project';
 
 import './styles.scss';
+import IProject from '../../../interfaces/IProject';
+import { IUser } from '../../../interfaces/IUser';
+import UserInfoContext from '../../../contexts/UserInfoContext';
+import CreateOrEditProject from '../../me/MyProjects/CreateOrEditProject';
+import classNames from 'classnames';
 
 export interface IProjectTasksProps {}
 
@@ -25,8 +35,15 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const sidebarContext = useContext(SidebarContext);
   const [milestones, setMilestones] = useState<IMilestoneApi[]>([]);
+  const [project, setProject] = useState<IProject>();
+  const userInfoContext = useContext(UserInfoContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    getProject(projectId!).then(res => {
+      setProject(res);
+    });
+
     getAllTasks(projectId!.toString()).then(res => {
       setTasks(res);
     });
@@ -39,16 +56,24 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
   }, [projectId]);
 
   const updateTaskList = () => {
-    getAllMilestones(projectId!)
-      .then(res => {
-        setMilestones(res.filter(m => m.name !== null));
+    setIsLoading(true);
 
-        getAllTasks(projectId!.toString()).then(res => {
-          setTasks([]);
-          setTasks(res);
-        });
-      })
-      .catch(err => console.error(err));
+    getProject(projectId!).then(res => {
+      setProject(res);
+
+      getAllMilestones(projectId!)
+        .then(res => {
+          setMilestones(res.filter(m => m.name !== null));
+
+          getAllTasks(projectId!.toString()).then(res => {
+            setTasks([]);
+            setTasks(res);
+
+            setIsLoading(false);
+          });
+        })
+        .catch(err => console.error(err));
+    });
 
     sidebarContext.removeSidebarComponent();
   };
@@ -56,10 +81,29 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
   const taskWithNoMilestone = (t: ITask) =>
     milestones.findIndex(m => m.name === t.milestone) === -1;
 
+  const handleProjectEditClick = () => {
+    sidebarContext.removeSidebarComponent();
+    sidebarContext.setSidebarComponent(
+      <CreateOrEditProject projectId={projectId} onSuccess={updateTaskList} />
+    );
+  };
+
   return (
     <Container fluid>
       <Row className="project-tasks-menu">
         <div className="text-right w-100">
+          {project &&
+            (project?.manager as IUser)._id === userInfoContext.user?._id && (
+              <Button
+                variant="outline-primary"
+                title="Editar o projeto"
+                onClick={handleProjectEditClick}
+                className="mr-1"
+              >
+                <FontAwesomeIcon icon={faPen} />
+              </Button>
+            )}
+
           <Button
             variant="primary"
             onClick={() =>
@@ -72,7 +116,13 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
           </Button>
         </div>
       </Row>
-      <Row className="project-tasks-list mt-3">
+      <Row
+        className={classNames({
+          'project-tasks-list': true,
+          'mt-3': true,
+          'd-none': isLoading,
+        })}
+      >
         {/* Para tarefas que possuem marco de projeto */}
         {milestones.map(milestone => (
           <>

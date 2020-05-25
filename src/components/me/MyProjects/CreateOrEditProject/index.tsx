@@ -4,6 +4,7 @@ import React, {
   useState,
   useRef,
   useMemo,
+  useContext,
 } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { IUser } from '../../../../interfaces/IUser';
@@ -27,6 +28,8 @@ import {
 } from '../../../../services/project';
 import ITeam from '../../../../interfaces/ITeam';
 import { getAllTeams } from '../../../../services/team';
+import SidebarContext from '../../../../contexts/SidebarContext';
+import FinishProject from '../FinishProject';
 
 export interface ICreateProjectProps {
   projectId?: string;
@@ -40,6 +43,7 @@ interface IVisibility {
 }
 
 const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
+  const sidebarContext = useContext(SidebarContext);
   const { register, handleSubmit, errors } = useForm<IFormDataAddProject>();
   const [project, setProject] = useState<IProject>();
   const [people, setPeople] = useState<IUser[]>([]);
@@ -394,6 +398,12 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
     }
   };
 
+  const onClickFinishProjectButton = () => {
+    sidebarContext.setSidebarComponent(
+      <FinishProject projectId={props.projectId!} />
+    );
+  };
+
   return (
     <Form onSubmit={onSubmit}>
       <fieldset>
@@ -548,6 +558,16 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
           {props.projectId && 'Editar projeto'}
           {!props.projectId && 'Criar projeto'}
         </Button>
+        {props.projectId && (
+          <Button
+            type="button"
+            variant="warning"
+            block
+            onClick={onClickFinishProjectButton}
+          >
+            Encerrar o projeto
+          </Button>
+        )}
       </fieldset>
     </Form>
   );
