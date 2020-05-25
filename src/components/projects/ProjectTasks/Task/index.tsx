@@ -159,12 +159,21 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
               {props.showAsMyTasks && (
                 <span className="ml-2 task-project-description text-muted">
                   <Link to={`/projects/${task.project._id}`}>
-                    {task.project.name}{' '}
-                    <FontAwesomeIcon
-                      className="ml-1"
-                      icon={faExternalLinkAlt}
-                    />
+                    {task.project.name}
                   </Link>
+
+                  {task.milestone && (
+                    <>
+                      <span className="project-milestone-separator"> / </span>
+                      <Link
+                        to={`/projects/${
+                          task.project._id
+                        }#milestone-${task.milestone.toLowerCase()}`}
+                      >
+                        {task.milestone}
+                      </Link>
+                    </>
+                  )}
                 </span>
               )}
             </Row>
