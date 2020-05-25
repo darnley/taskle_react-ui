@@ -12,29 +12,49 @@ import { faCalendarAlt } from '@fortawesome/free-regular-svg-icons';
 import Task from './Task';
 import SidebarContext from '../../../contexts/SidebarContext';
 import TaskAdd from './TaskAdd';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTag, faLink } from '@fortawesome/free-solid-svg-icons';
+import IMilestoneApi from '../../../interfaces/IMilestoneApi';
+import { getAllMilestones } from '../../../services/project';
+
+import './styles.scss';
 
 export interface IProjectTasksProps {}
 
 const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
   const { projectId } = useParams();
-  const [tasks, setTasks] = useState<ITask[]>();
+  const [tasks, setTasks] = useState<ITask[]>([]);
   const sidebarContext = useContext(SidebarContext);
+  const [milestones, setMilestones] = useState<IMilestoneApi[]>([]);
 
   useEffect(() => {
     getAllTasks(projectId!.toString()).then(res => {
       setTasks(res);
     });
+
+    getAllMilestones(projectId!)
+      .then(res => {
+        setMilestones(res.filter(m => m.name !== null));
+      })
+      .catch(err => console.error(err));
   }, [projectId]);
 
   const updateTaskList = () => {
-    console.log('Updating task list...');
-    getAllTasks(projectId!.toString()).then(res => {
-      setTasks([]);
-      setTasks(res);
-    });
+    getAllMilestones(projectId!)
+      .then(res => {
+        setMilestones(res.filter(m => m.name !== null));
+
+        getAllTasks(projectId!.toString()).then(res => {
+          setTasks([]);
+          setTasks(res);
+        });
+      })
+      .catch(err => console.error(err));
+
     sidebarContext.removeSidebarComponent();
   };
+
+  const taskWithNoMilestone = (t: ITask) =>
+    milestones.findIndex(m => m.name === t.milestone) === -1;
 
   return (
     <Container fluid>
@@ -53,9 +73,41 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
         </div>
       </Row>
       <Row className="project-tasks-list mt-3">
-        {tasks?.map(task => (
-          <Task task={task} key={task._id} updateFunc={updateTaskList} />
+        {/* Para tarefas que possuem marco de projeto */}
+        {milestones.map(milestone => (
+          <>
+            <a
+              href={`#milestone-${milestone.name.toLowerCase()}`}
+              className="milestone-divider mt-1"
+              id={`milestone-${milestone.name.toLowerCase()}`}
+            >
+              {milestone.name}
+              <FontAwesomeIcon icon={faLink} className="ml-1" />
+            </a>
+            {tasks
+              .filter(t => t.milestone === milestone.name)
+              .map(task => (
+                <Task task={task} key={task._id} updateFunc={updateTaskList} />
+              ))}
+          </>
         ))}
+
+        {/* Para tarefas que NÃO possuem marco de projeto */}
+        {tasks.filter(taskWithNoMilestone).length > 0 && (
+          <>
+            <a
+              href={`#milestone-sem-marco`}
+              className="milestone-divider no-milestone mt-1"
+              id={`milestone-sem-marco`}
+            >
+              <i>Sem marco</i>
+              <FontAwesomeIcon icon={faLink} className="ml-1" />
+            </a>
+            {tasks.filter(taskWithNoMilestone).map(task => (
+              <Task task={task} key={task._id} updateFunc={updateTaskList} />
+            ))}
+          </>
+        )}
       </Row>
     </Container>
   );
