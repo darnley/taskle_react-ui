@@ -1,8 +1,10 @@
-import { IUser } from './IUser';
-import IProject from './IProject';
-
 export default interface IProjectEndRating {
-  user: IUser;
-  project: IProject;
+  /**
+   * The user ID.
+   */
+  user: string;
+  /**
+   * The rating from 0 to 4.
+   */
   starRating: number;
 }
