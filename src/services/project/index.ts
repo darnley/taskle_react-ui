@@ -1,5 +1,6 @@
 import IProject from '../../interfaces/IProject';
 import authenticatedAxios from '../authenticatedAxios';
+import IMilestoneApi from '../../interfaces/IMilestoneApi';
 
 export function getProject(projectId: string): Promise<IProject> {
   return new Promise<IProject>((resolve, reject) => {
@@ -31,10 +32,10 @@ export function updateProject(
   });
 }
 
-export function getAllMilestones(projectId: string): Promise<string[]> {
-  return new Promise<string[]>((resolve, reject) => {
+export function getAllMilestones(projectId: string): Promise<IMilestoneApi[]> {
+  return new Promise<IMilestoneApi[]>((resolve, reject) => {
     authenticatedAxios
-      .get<string[]>(`/projects/${projectId}/milestones`)
+      .get<IMilestoneApi[]>(`/projects/${projectId}/milestones`)
       .then(res => resolve(res.data))
       .catch(err => reject(err));
   });

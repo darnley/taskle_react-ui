@@ -22,6 +22,8 @@ import './styles.scss';
 import moment from 'moment';
 import { useToasts } from 'react-toast-notifications';
 import { parseKeyword } from '../../../../utils/keyword';
+import { getAllMilestones } from '../../../../services/project';
+import IMilestoneApi from '../../../../interfaces/IMilestoneApi';
 
 export interface ITaskEditProps {
   projectId: string;
@@ -35,13 +37,20 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   const [people, setPeople] = useState<IUser[]>();
   const [selectedResponsible, setSelectedResponsible] = useState<IUser>();
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+  const [selectedMilestone, setSelectedMilestone] = useState<IMilestoneApi>();
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [milestones, setMilestones] = useState<IMilestoneApi[]>([]);
   const typeaheadKeywords = useRef<Typeahead<TypeaheadModel>>();
+  const typeaheadMilestone = useRef<Typeahead<TypeaheadModel>>();
   const { addToast } = useToasts();
   const [
     isKeywordManuallyAddedToArray,
     setIsKeywordManuallyAddedToArray,
   ] = useState(false);
+  const [
+    isMilestoneManuallyAddedToArray,
+    setIsMilestoneManuallyAddedToArray,
+  ] = useState<boolean>(false);
 
   useEffect(() => {
     if (props.projectId && props.taskId) {
@@ -50,6 +59,8 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
           setTask(task);
           setSelectedKeywords(task.keywords);
           if (task.responsible) setSelectedResponsible(task.responsible);
+          if (task.milestone)
+            setSelectedMilestone({ name: task.milestone } as IMilestoneApi);
         })
         .catch(err => {
           console.error(err);
@@ -73,6 +84,14 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
       .catch(err => {
         console.error(err);
       });
+
+    getAllMilestones(props.projectId)
+      .then(milestones => {
+        setMilestones(milestones);
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }, [props.projectId, props.taskId]);
 
   const onSubmit = handleSubmit(data => {
@@ -86,6 +105,9 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
     data.keywords = selectedKeywords.filter(
       (v, i) => selectedKeywords.indexOf(v) === i
     );
+
+    if (selectedMilestone) data.milestone = selectedMilestone.name;
+    else delete data.milestone;
 
     if (data.deliveryDate)
       data.deliveryDate = moment(data.deliveryDate)
@@ -145,6 +167,10 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
     (typeaheadKeywords.current as any).clear();
   };
 
+  const handleMilestoneChange = (selectedMilestone: IMilestoneApi[]) => {
+    setSelectedMilestone(selectedMilestone[0]);
+  };
+
   const hangleKeywordInputchange = (input: string, e: Event) => {
     e.preventDefault();
 
@@ -158,6 +184,25 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
       const inputWord = input.toLowerCase();
       setKeywords([...keywords, inputWord]);
       setIsKeywordManuallyAddedToArray(true);
+    }
+  };
+
+  const hangleMilestoneInputChange = (input: string, e: Event) => {
+    e.preventDefault();
+
+    if (isMilestoneManuallyAddedToArray) {
+      let previousArray = milestones;
+      previousArray.splice(previousArray.length - 1, 1);
+      setMilestones(previousArray);
+    }
+
+    let insertedMilestone: IMilestoneApi = {
+      name: input,
+    };
+
+    if (!milestones.includes(insertedMilestone)) {
+      setMilestones([...milestones, insertedMilestone]);
+      setIsMilestoneManuallyAddedToArray(true);
     }
   };
 
@@ -303,6 +348,29 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
               </div>
             )}
           />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Marco</Form.Label>
+          <Typeahead
+            options={milestones || []}
+            labelKey="name"
+            id="milestones-typeahead-form"
+            paginate={false}
+            clearButton
+            selected={
+              selectedMilestone
+                ? milestones?.filter(p => p.name === selectedMilestone.name)
+                : undefined
+            }
+            emptyLabel="Nenhum marco encontrado."
+            onChange={handleMilestoneChange}
+            onInputChange={hangleMilestoneInputChange}
+            renderMenuItemChildren={(option: IMilestoneApi) => (
+              <div>
+                <div>{option.name}</div>
+              </div>
+            )}
+          ></Typeahead>
         </Form.Group>
         <Form.Group controlId="complexity">
           <Form.Label>Complexidade</Form.Label>
