@@ -2,6 +2,7 @@ import IProject from '../../interfaces/IProject';
 import authenticatedAxios from '../authenticatedAxios';
 import IMilestoneApi from '../../interfaces/IMilestoneApi';
 import IProjectEndRating from '../../interfaces/IProjectEndRating';
+import { IUser } from '../../interfaces/IUser';
 
 export function getProject(projectId: string): Promise<IProject> {
   return new Promise<IProject>((resolve, reject) => {
@@ -39,6 +40,15 @@ export function getAllMilestones(projectId: string): Promise<IMilestoneApi[]> {
       .get<IMilestoneApi[]>(`/projects/${projectId}/milestones`)
       .then(res => resolve(res.data))
       .catch(err => reject(err));
+  });
+}
+
+export function getPeople(projectId: string): Promise<IUser[]> {
+  return new Promise<IUser[]>((resolve, reject) => {
+    authenticatedAxios
+      .get<IUser[]>(`/projects/${projectId}/people`)
+      .then(res => resolve(res.data))
+      .catch(reject);
   });
 }
 
