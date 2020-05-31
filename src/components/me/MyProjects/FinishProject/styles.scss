@@ -1,0 +1,11 @@
+.user-project-rating-grid-container {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 1px 1px;
+    grid-template-areas: "user-project-rating-info user-project-rating-stars";
+}
+
+.user-project-rating-info { grid-area: user-project-rating-info; }
+
+.user-project-rating-stars { grid-area: user-project-rating-stars; }
