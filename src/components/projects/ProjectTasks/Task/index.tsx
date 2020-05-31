@@ -31,6 +31,7 @@ import SidebarContext from '../../../../contexts/SidebarContext';
 import TaskEdit from '../TaskAdd';
 import { Link } from 'react-router-dom';
 import TaskStatus from '../../../../enums/TaskStatus';
+import ProjectStatus from '../../../../enums/ProjectStatus';
 
 export interface ITaskProps {
   task: ITask;
@@ -45,7 +46,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
   const { addToast } = useToasts();
 
   const addCurrentUserAsResponsible = (innerTask: ITask) => {
-    if (userInfoContext) {
+    if (userInfoContext && task.project.status !== ProjectStatus.Ended) {
       innerTask.responsible = userInfoContext.user;
 
       updateTask((innerTask.project as IProject)._id, innerTask._id, innerTask)
@@ -77,7 +78,10 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
   };
 
   const handleTaskFinishing = () => {
-    if (task.status === TaskStatus.Finished) {
+    if (
+      task.status === TaskStatus.Finished ||
+      task.project.status === ProjectStatus.Ended
+    ) {
       return;
     }
 
@@ -90,6 +94,10 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
   };
 
   const toggleTaskStatus = () => {
+    if (task.project.status === ProjectStatus.Ended) {
+      return;
+    }
+
     getTask(task.project._id, task._id)
       .then(currentTask => {
         if (currentTask.status === TaskStatus.NotStarted) {
@@ -216,6 +224,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
                   <Button
                     className="btn-xs"
                     variant="outline-primary"
+                    disabled={task.project.status === ProjectStatus.Ended}
                     onClick={() => addCurrentUserAsResponsible(task)}
                   >
                     Atribuir a mim
@@ -227,6 +236,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
           <Col md={3} className="align-items-center justify-content-center">
             <Button
               variant="outline-primary"
+              disabled={task.project.status === ProjectStatus.Ended}
               onClick={() =>
                 sidebarContext.setSidebarComponent(
                   <TaskEdit
@@ -244,6 +254,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
             {!props.showAsMyTasks && (
               <Button
                 variant="link"
+                disabled={task.project.status === ProjectStatus.Ended}
                 onClick={toggleTaskFlag}
                 className={`h-100 float-right mr-1 task-flag${
                   task.isFlagged ? ' task-is-flagged' : ' task-is-not-flagged'

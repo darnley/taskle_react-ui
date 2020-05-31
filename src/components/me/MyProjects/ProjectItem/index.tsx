@@ -9,6 +9,7 @@ import UserInfoContext from '../../../../contexts/UserInfoContext';
 import SidebarContext from '../../../../contexts/SidebarContext';
 import CreateOrEditProject from '../CreateOrEditProject';
 import { IUser } from '../../../../interfaces/IUser';
+import ProjectStatus from '../../../../enums/ProjectStatus';
 
 export interface IProjectItemProps {
   project: IProject;
@@ -73,6 +74,7 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
                   className="h-100 float-right"
                   title="Editar o projeto"
                   onClick={handleProjectEditClick}
+                  disabled={props.project.status === ProjectStatus.Ended}
                 >
                   <FontAwesomeIcon icon={faPen} />
                 </Button>

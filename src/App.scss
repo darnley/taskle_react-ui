@@ -41,3 +41,7 @@
 .user-typeahead-information { grid-area: user-typeahead-information; }
 
 .user-typeahead-stars { grid-area: user-typeahead-stars; }
+
+.btn.disabled, .btn:disabled {
+  cursor: not-allowed
+}

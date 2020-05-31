@@ -27,6 +27,7 @@ import { IUser } from '../../../interfaces/IUser';
 import UserInfoContext from '../../../contexts/UserInfoContext';
 import CreateOrEditProject from '../../me/MyProjects/CreateOrEditProject';
 import classNames from 'classnames';
+import ProjectStatus from '../../../enums/ProjectStatus';
 
 export interface IProjectTasksProps {}
 
@@ -99,6 +100,7 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
                 title="Editar o projeto"
                 onClick={handleProjectEditClick}
                 className="mr-1"
+                disabled={project?.status === ProjectStatus.Ended}
               >
                 <FontAwesomeIcon icon={faPen} />
               </Button>
@@ -106,6 +108,7 @@ const ProjectTasks: React.FunctionComponent<IProjectTasksProps> = props => {
 
           <Button
             variant="primary"
+            disabled={project?.status === ProjectStatus.Ended}
             onClick={() =>
               sidebarContext.setSidebarComponent(
                 <TaskAdd projectId={projectId!} onSuccess={updateTaskList} />
