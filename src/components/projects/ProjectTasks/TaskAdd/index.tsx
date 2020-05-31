@@ -7,7 +7,15 @@ import {
   updateTask,
   createTask,
 } from '../../../../services/project/task';
-import { Form, Button, Badge, FormControl } from 'react-bootstrap';
+import {
+  Form,
+  Button,
+  Badge,
+  FormControl,
+  OverlayTrigger,
+  Popover,
+  ListGroup,
+} from 'react-bootstrap';
 import classNames from 'classnames';
 import RBRef from '../../../../types/RBRef';
 import { IUser } from '../../../../interfaces/IUser';
@@ -17,13 +25,14 @@ import TaskComplexity from '../../../../enums/TaskComplexity';
 import IProject from '../../../../interfaces/IProject';
 import { getAllKeywords } from '../../../../services/keywords';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faStar, faSearch } from '@fortawesome/free-solid-svg-icons';
 import './styles.scss';
 import moment from 'moment';
 import { useToasts } from 'react-toast-notifications';
 import { parseKeyword } from '../../../../utils/keyword';
-import { getAllMilestones } from '../../../../services/project';
+import { getAllMilestones, getPeople } from '../../../../services/project';
 import IMilestoneApi from '../../../../interfaces/IMilestoneApi';
+import UserDropdownPopover from '../../../shared/UserDropdownPopover';
 
 export interface ITaskEditProps {
   projectId: string;
@@ -35,6 +44,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   const { register, handleSubmit, errors } = useForm<IFormDataAddTask>();
   const [task, setTask] = useState<ITask>();
   const [people, setPeople] = useState<IUser[]>();
+  const [projectPeople, setProjectPeople] = useState<IUser[]>([]);
   const [selectedResponsible, setSelectedResponsible] = useState<IUser>();
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [selectedMilestone, setSelectedMilestone] = useState<IMilestoneApi>();
@@ -58,7 +68,12 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
         .then(task => {
           setTask(task);
           setSelectedKeywords(task.keywords);
-          if (task.responsible) setSelectedResponsible(task.responsible);
+
+          getPeople(props.projectId).then(projectPeople => {
+            setProjectPeople(projectPeople);
+            if (task.responsible) setSelectedResponsible(task.responsible);
+          });
+
           if (task.milestone)
             setSelectedMilestone({ name: task.milestone } as IMilestoneApi);
         })
@@ -92,6 +107,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
       .catch(err => {
         console.error(err);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.projectId, props.taskId]);
 
   const onSubmit = handleSubmit(data => {
@@ -295,9 +311,33 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
             emptyLabel="Nenhuma pessoa encontrada."
             onChange={handleResponsibleChange}
             renderMenuItemChildren={(option: IUser) => (
-              <div>
-                <div>{option.firstName + ' ' + option.lastName}</div>
-                <small className="text-muted">{option.emailAddress}</small>
+              <div className="user-typeahead-grid-container">
+                <div className="user-typeahead-keywords">
+                  <OverlayTrigger
+                    placement="left"
+                    overlay={overlayProps => (
+                      <UserDropdownPopover
+                        {...overlayProps}
+                        userId={option._id}
+                      />
+                    )}
+                  >
+                    <Button variant="light" size="sm" className="h-100">
+                      <FontAwesomeIcon icon={faSearch} />
+                    </Button>
+                  </OverlayTrigger>
+                </div>
+                <div className="user-typeahead-information">
+                  {option.firstName + ' ' + option.lastName}
+                  <br />
+                  <small className="text-muted">{option.emailAddress}</small>
+                </div>
+                <div className="user-typeahead-stars text-center">
+                  <div>{option.starRating}</div>
+                  <small>
+                    <FontAwesomeIcon icon={faStar} />{' '}
+                  </small>
+                </div>
               </div>
             )}
           ></Typeahead>

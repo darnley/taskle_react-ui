@@ -60,9 +60,9 @@ export interface IUser {
 
   starRatingCount: number;
 
-  createdAt: Date;
+  createdAt: string;
 
-  updatedAt: Date;
+  updatedAt: string;
 
   keywords: IUserKeyword[];
 }
