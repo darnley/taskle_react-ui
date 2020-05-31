@@ -1,4 +1,5 @@
 import Role from '../enums/Role';
+import IUserKeyword from './IUserKeyword';
 
 /**
  * The system's user.
@@ -62,4 +63,6 @@ export interface IUser {
   createdAt: Date;
 
   updatedAt: Date;
+
+  keywords: IUserKeyword[];
 }
