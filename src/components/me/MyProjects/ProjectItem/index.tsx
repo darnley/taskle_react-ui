@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import IProject from '../../../../interfaces/IProject';
-import { Card, Col, Row, Button } from 'react-bootstrap';
+import { Card, Col, Row, Button, Badge } from 'react-bootstrap';
 import './styles.scss';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -39,11 +39,19 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
         <Card.Body className="project-card">
           <Row className="ml-1">
             <Col md={6}>
-              <Row className="project-name">{props.project.name}</Row>
+              <Row className="project-name">
+                {props.project.name}
+                {props.project.status === ProjectStatus.Ended && (
+                  <span className="ml-2">
+                    <Badge variant="secondary">Encerrado</Badge>
+                  </span>
+                )}
+              </Row>
               <Row className="project-description">
-                {props.project.description}
                 {!props.project.description && (
-                  <i className="text-muted">Sem descrição</i>
+                  <div>
+                    <i className="text-muted">Sem descrição</i>
+                  </div>
                 )}
               </Row>
               <Row className="project-info text-muted">
