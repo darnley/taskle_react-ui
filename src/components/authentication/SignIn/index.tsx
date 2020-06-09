@@ -110,9 +110,7 @@ const SignIn = ({ component, ...rest }) => {
                         }) as RBRef
                       }
                     />
-                    <Form.Text className="text-muted">
-                      Não compartilhe o endereço de e-mail com ninguém.
-                    </Form.Text>
+
                     {errors.username && (
                       <Form.Text className="invalid-feedback">
                         O endereço de e-mail inserido é inválido.
@@ -129,6 +127,9 @@ const SignIn = ({ component, ...rest }) => {
                       })}
                       ref={register({ required: true }) as RBRef}
                     />
+                    <Form.Text className="text-muted">
+                      Não compartilhe a sua senha com ninguém.
+                    </Form.Text>
                     {errors.password && (
                       <Form.Text className="invalid-feedback">
                         A senha inserida é inválida.
