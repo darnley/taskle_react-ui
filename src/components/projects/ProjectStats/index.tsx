@@ -23,29 +23,9 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
   const getStats = (projectId: string) => {
     getTaskCount(projectId)
       .then(res => {
-        setStatsPerKeywords(
-          res.perKeywords.map(e => {
-            let f: any = e;
-            f.name = e.keyword;
-            return e;
-          })
-        );
-
-        setStatsPerStatus(
-          res.perTaskStatus.map(e => {
-            let f: any = e;
-            f.name = e.status;
-            return e;
-          })
-        );
-
-        setStatsPerComplexity(
-          res.perTaskComplexity.map(e => {
-            let f: any = e;
-            f.name = e.complexity;
-            return e;
-          })
-        );
+        setStatsPerKeywords(res.perKeywords);
+        setStatsPerStatus(res.perTaskStatus);
+        setStatsPerComplexity(res.perTaskComplexity);
       })
       .catch(err => console.error(err));
   };
@@ -67,6 +47,7 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                 <PieChart width={260} height={260}>
                   <Pie
                     dataKey="count"
+                    nameKey="status"
                     isAnimationActive={false}
                     data={statsPerStatus!}
                     cx={130}
@@ -86,6 +67,7 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                 <PieChart width={260} height={260}>
                   <Pie
                     dataKey="count"
+                    nameKey="complexity"
                     isAnimationActive={false}
                     data={statsPerComplexity}
                     cx={130}
