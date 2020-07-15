@@ -13,8 +13,6 @@ import {
   Badge,
   FormControl,
   OverlayTrigger,
-  Popover,
-  ListGroup,
 } from 'react-bootstrap';
 import classNames from 'classnames';
 import RBRef from '../../../../types/RBRef';
@@ -51,7 +49,6 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
   const [keywords, setKeywords] = useState<string[]>([]);
   const [milestones, setMilestones] = useState<IMilestoneApi[]>([]);
   const typeaheadKeywords = useRef<Typeahead<TypeaheadModel>>();
-  const typeaheadMilestone = useRef<Typeahead<TypeaheadModel>>();
   const { addToast } = useToasts();
   const [
     isKeywordManuallyAddedToArray,
