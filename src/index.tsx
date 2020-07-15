@@ -111,7 +111,7 @@ ReactDOM.render(
                       children={<ProjectTasks />}
                     />,
                     <Tab
-                      eventkey="project-stats"
+                      eventKey="project-stats"
                       title="Estatísticas"
                       key={2}
                       children={<ProjectStats />}
