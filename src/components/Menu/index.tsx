@@ -14,6 +14,7 @@ import './styles.scss';
 import logoWhite from '../../logo-white.svg';
 import { LinkContainer } from 'react-router-bootstrap';
 import routeConfig from '../../routes.config';
+import Skeleton from 'react-loading-skeleton';
 
 export interface IMenuProps {}
 
@@ -39,9 +40,8 @@ const Menu: FunctionComponent<IMenuProps> = props => {
               alt="Generic placeholder"
             />
             <Media.Body className="user-name">
-              {userInfoContext.user?.firstName +
-                ' ' +
-                userInfoContext.user?.lastName}
+              {userInfoContext.user &&
+                `${userInfoContext.user.firstName} ${userInfoContext.user.lastName}`}
               <span className="float-right">
                 <LinkContainer to={routeConfig.signOut}>
                   <Button variant="link" size="sm" className="p-0">
