@@ -134,7 +134,6 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
     console.log(data);
 
     if (task?._id) {
-      console.log('exitent');
       updateTask(props.projectId!, props.taskId!, data)
         .then(() => {
           addToast('Tarefa alterada com sucesso', { appearance: 'success' });
@@ -188,7 +187,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
     setSelectedMilestone(selectedMilestone[0]);
   };
 
-  const hangleKeywordInputchange = (input: string, e: Event) => {
+  const handleKeywordInputChange = (input: string, e: Event) => {
     e.preventDefault();
 
     if (isKeywordManuallyAddedToArray) {
@@ -204,7 +203,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
     }
   };
 
-  const hangleMilestoneInputChange = (input: string, e: Event) => {
+  const handleMilestoneInputChange = (input: string, e: Event) => {
     e.preventDefault();
 
     if (isMilestoneManuallyAddedToArray) {
@@ -382,7 +381,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
             id="keywords-typeahead-form"
             emptyLabel="Nenhuma palavra-chave encontrada."
             onChange={handleKeywordChange}
-            onInputChange={hangleKeywordInputchange}
+            onInputChange={handleKeywordInputChange}
             renderMenuItemChildren={(option: string) => (
               <div>
                 <div>{option}</div>
@@ -405,7 +404,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
             }
             emptyLabel="Nenhum marco encontrado."
             onChange={handleMilestoneChange}
-            onInputChange={hangleMilestoneInputChange}
+            onInputChange={handleMilestoneInputChange}
             renderMenuItemChildren={(option: IMilestoneApi) => (
               <div>
                 <div>{option.name}</div>
