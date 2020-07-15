@@ -333,7 +333,7 @@ const TaskAdd: React.FunctionComponent<ITaskEditProps> = props => {
                   <small className="text-muted">{option.emailAddress}</small>
                 </div>
                 <div className="user-typeahead-stars text-center">
-                  <div>{option.starRating}</div>
+                  <div>{option.starRating.toPrecision(2)}</div>
                   <small>
                     <FontAwesomeIcon icon={faStar} />{' '}
                   </small>
