@@ -7,10 +7,14 @@ import {
 } from '../../../interfaces/IProjectTaskCountStats';
 import { getTaskCount } from '../../../services/project/stats';
 import { useParams } from 'react-router-dom';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Treemap } from 'recharts';
 import { Container, Col, Card, Row } from 'react-bootstrap';
+import { getColorTaskComplexity, getColorTaskStatus } from '../../../utils/chart/colors';
+import TaskComplexity from '../../../enums/TaskComplexity';
+import TaskStatus from '../../../enums/TaskStatus';
+import { getLabelTaskComplexity, getLabelTaskStatus } from '../../../utils/chart/labels';
 
-export interface IProjectStatsProps {}
+export interface IProjectStatsProps { }
 
 const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
   const { projectId } = useParams();
@@ -23,7 +27,10 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
   const getStats = (projectId: string) => {
     getTaskCount(projectId)
       .then(res => {
-        setStatsPerKeywords(res.perKeywords);
+        setStatsPerKeywords(res.perKeywords.map(entry => {
+          entry.name = entry.keyword;
+          return entry;
+        }));
         setStatsPerStatus(res.perTaskStatus);
         setStatsPerComplexity(res.perTaskComplexity);
       })
@@ -44,19 +51,24 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                 Por <i>status</i> da tarefa
               </Card.Header>
               <Card.Body>
-                <PieChart width={260} height={260}>
-                  <Pie
-                    dataKey="count"
-                    nameKey="status"
-                    isAnimationActive={false}
-                    data={statsPerStatus!}
-                    cx={130}
-                    cy={130}
-                    outerRadius={80}
-                    label={entry => entry.name}
-                  />
-                  <Tooltip />
-                </PieChart>
+                <ResponsiveContainer height={200} width="100%">
+                  <PieChart>
+                    <Pie
+                      dataKey="count"
+                      nameKey="status"
+                      animationDuration={500}
+                      data={statsPerStatus!}
+                      outerRadius={80}
+                      label={entry => getLabelTaskStatus(entry.name as TaskStatus)}
+                    >
+                      {
+                        statsPerStatus.map((entry, index) => <Cell fill={getColorTaskStatus(entry.status as TaskStatus)} />)
+                      }
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+
               </Card.Body>
             </Card>
           </Row>
@@ -64,19 +76,23 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
             <Card className="h-100 w-100">
               <Card.Header>Por complexidade</Card.Header>
               <Card.Body>
-                <PieChart width={260} height={260}>
-                  <Pie
-                    dataKey="count"
-                    nameKey="complexity"
-                    isAnimationActive={false}
-                    data={statsPerComplexity}
-                    cx={130}
-                    cy={130}
-                    outerRadius={80}
-                    label={entry => entry.name}
-                  />
-                  <Tooltip />
-                </PieChart>
+                <ResponsiveContainer height={260}>
+                  <PieChart>
+                    <Pie
+                      dataKey="count"
+                      nameKey="complexity"
+                      animationDuration={500}
+                      data={statsPerComplexity}
+                      outerRadius={80}
+                      label={entry => getLabelTaskComplexity(entry.name as TaskComplexity)}
+                    >
+                      {
+                        statsPerComplexity.map((entry, index) => <Cell fill={getColorTaskComplexity(entry.complexity as TaskComplexity)} />)
+                      }
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
               </Card.Body>
             </Card>
           </Row>
@@ -84,7 +100,11 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
         <Col md={6}>
           <Card className="h-100 w-100">
             <Card.Header>Por palavras-chave</Card.Header>
-            <Card.Body>asdasd</Card.Body>
+            <Card.Body>
+              <ResponsiveContainer>
+                <Treemap data={statsPerKeywords} dataKey="count" stroke="#fff" animationDuration={500} />
+              </ResponsiveContainer>
+            </Card.Body>
           </Card>
         </Col>
       </Row>

@@ -10,6 +10,7 @@ export interface IPerTaskComplexity {
 
 export interface IPerKeyword {
   keyword: string;
+  name: string;
   count: number;
 }
 

@@ -1,5 +1,6 @@
 import Role from '../enums/Role';
 import IUserKeyword from './IUserKeyword';
+import ITeam from './ITeam';
 
 /**
  * The system's user.
@@ -55,6 +56,8 @@ export interface IUser {
    * @type {Role}
    */
   role: Role;
+
+  team: ITeam;
 
   starRating: number;
 

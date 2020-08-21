@@ -8,7 +8,7 @@ import AddPerson from './AddPerson';
 import SidebarContext from '../../../contexts/SidebarContext';
 import PeopleDeck from './PeopleDeck';
 
-export interface IPeopleProps {}
+export interface IPeopleProps { }
 
 const People: React.FunctionComponent<IPeopleProps> = props => {
   const [people, setPeople] = useState<IUser[]>();
