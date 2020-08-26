@@ -4,7 +4,7 @@ import {
   faProjectDiagram,
   faTasks,
 } from '@fortawesome/free-solid-svg-icons';
-import React, { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext, useState, useEffect } from 'react';
 import { Media, Nav, Card, Button } from 'react-bootstrap';
 import SidebarContext from '../../contexts/SidebarContext';
 import UserInfoContext from '../../contexts/UserInfoContext';
@@ -15,12 +15,28 @@ import logoWhite from '../../logo-white.svg';
 import { LinkContainer } from 'react-router-bootstrap';
 import routeConfig from '../../routes.config';
 import Skeleton from 'react-loading-skeleton';
+import getMyProjects from '../../services/me/getMyProjects';
+import { getMyTasks } from '../../services/me';
 
-export interface IMenuProps {}
+export interface IMenuProps { }
 
 const Menu: FunctionComponent<IMenuProps> = props => {
   const sidebarContext = useContext(SidebarContext);
   const userInfoContext = useContext(UserInfoContext);
+
+  const [projectCount, setProjectCount] = useState(-1);
+  const [taskCount, setTaskCount] = useState(-1);
+  const [peopleCount, setPeopleCount] = useState(15);
+
+  useEffect(() => {
+    getMyProjects()
+      .then(res => setProjectCount(res.length))
+      .catch(console.error);
+
+    getMyTasks()
+      .then(res => setTaskCount(res.length))
+      .catch(console.error)
+  }, [])
 
   return (
     <>
@@ -60,13 +76,13 @@ const Menu: FunctionComponent<IMenuProps> = props => {
                   href="/me/projects"
                   text="Meus projetos"
                   icon={faProjectDiagram}
-                  number={7}
+                  number={projectCount}
                 />
                 <MenuSectionItem
                   href="/me/tasks"
                   text="Minhas tarefas"
                   icon={faTasks}
-                  number={3}
+                  number={taskCount}
                 />
               </MenuSection>
               <MenuSection name="Minha organização">

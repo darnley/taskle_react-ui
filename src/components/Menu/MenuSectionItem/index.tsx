@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { LinkContainer } from 'react-router-bootstrap';
+import Skeleton from 'react-loading-skeleton';
 
 type MenuSectionItemProps = {
   href: string;
@@ -30,7 +31,12 @@ const MenuSectionItem: FunctionComponent<MenuSectionItemProps> = props => {
           <FontAwesomeIcon icon={icon} />
         </span>
         <span className="menu-section-item-text">{props.text}</span>
-        {props.number && (
+        {(!props.number || props.number < 0) && (
+          <span className="menu-section-item-number">
+            <Skeleton width={15} />
+          </span>
+        )}
+        {props.number && props.number >= 0 && (
           <span className="menu-section-item-number">{props.number}</span>
         )}
       </Nav.Link>
