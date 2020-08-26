@@ -9,7 +9,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CreateOrEditProject from './CreateOrEditProject';
 import Skeleton from 'react-loading-skeleton';
 
-interface IMyProjectsProps {}
+interface IMyProjectsProps { }
 
 const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
   const sidebarContext = useContext(SidebarContext);
@@ -70,7 +70,7 @@ const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
         </span>
       </div>
       <div className="project-list">
-        {!myProjects && <Skeleton count={4} height={30} />}
+        {!myProjects && <Skeleton count={4} height={100} />}
         {myProjectsList &&
           myProjectsList.map((project, index, array) => (
             <ProjectItem project={project} key={`project-${index}`} />
