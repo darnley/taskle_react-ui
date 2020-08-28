@@ -14,11 +14,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Task from '../../projects/ProjectTasks/Task';
 import { getMyTasks } from '../../../services/me';
+import Skeleton from 'react-loading-skeleton';
 
-interface IMyTasksProps {}
+interface IMyTasksProps { }
 
 const MyTasks: FunctionComponent<IMyTasksProps> = props => {
   const [tasks, setTasks] = useState<ITask[]>();
+  const [areTasksGot, setAreTasksGot] = useState<boolean>(false);
   const sidebarContext = useContext(SidebarContext);
 
   useEffect(() => {
@@ -29,6 +31,7 @@ const MyTasks: FunctionComponent<IMyTasksProps> = props => {
     getMyTasks().then(res => {
       setTasks([]);
       setTasks(res);
+      setAreTasksGot(true);
     });
   };
 
@@ -41,6 +44,7 @@ const MyTasks: FunctionComponent<IMyTasksProps> = props => {
   return (
     <Container fluid>
       <Row className="project-tasks-list mt-3">
+        {!areTasksGot && <Skeleton height={110} count={3} />}
         {tasks?.map(task => (
           <Task
             task={task}
