@@ -63,3 +63,22 @@ export function getTeamPeople(teamId: string): Promise<IUser[]> {
       .catch(reject);
   });
 }
+
+export function updateTeam(teamId: string, team: ITeam): Promise<ITeam> {
+  if (!teamId) {
+    throw Error("Param 'teamId' is required.");
+  }
+
+  if (!team) {
+    throw Error("Param 'team' is required.");
+  }
+
+  return new Promise<ITeam>((resolve, reject) => {
+    authenticatedAxios
+      .put<ITeam>(`/teams/${teamId}`, team)
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(reject);
+  });
+}
