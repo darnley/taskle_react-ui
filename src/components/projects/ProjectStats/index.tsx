@@ -7,12 +7,25 @@ import {
 } from '../../../interfaces/IProjectTaskCountStats';
 import { getTaskCount } from '../../../services/project/stats';
 import { useParams } from 'react-router-dom';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Treemap } from 'recharts';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Treemap,
+} from 'recharts';
 import { Container, Col, Card, Row } from 'react-bootstrap';
-import { getColorTaskComplexity, getColorTaskStatus } from '../../../utils/chart/colors';
+import {
+  getColorTaskComplexity,
+  getColorTaskStatus,
+} from '../../../utils/chart/colors';
 import TaskComplexity from '../../../enums/TaskComplexity';
 import TaskStatus from '../../../enums/TaskStatus';
-import { getLabelTaskComplexity, getLabelTaskStatus } from '../../../utils/chart/labels';
+import {
+  getLabelTaskComplexity,
+  getLabelTaskStatus,
+} from '../../../utils/chart/labels';
 
 export interface IProjectStatsProps { }
 
@@ -27,10 +40,12 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
   const getStats = (projectId: string) => {
     getTaskCount(projectId)
       .then(res => {
-        setStatsPerKeywords(res.perKeywords.map(entry => {
-          entry.name = entry.keyword;
-          return entry;
-        }));
+        setStatsPerKeywords(
+          res.perKeywords.map(entry => {
+            entry.name = entry.keyword;
+            return entry;
+          })
+        );
         setStatsPerStatus(res.perTaskStatus);
         setStatsPerComplexity(res.perTaskComplexity);
       })
@@ -59,16 +74,19 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                       animationDuration={500}
                       data={statsPerStatus!}
                       outerRadius={80}
-                      label={entry => getLabelTaskStatus(entry.name as TaskStatus)}
-                    >
-                      {
-                        statsPerStatus.map((entry, index) => <Cell fill={getColorTaskStatus(entry.status as TaskStatus)} />)
+                      label={entry =>
+                        getLabelTaskStatus(entry.name as TaskStatus)
                       }
+                    >
+                      {statsPerStatus.map((entry, index) => (
+                        <Cell
+                          fill={getColorTaskStatus(entry.status as TaskStatus)}
+                        />
+                      ))}
                     </Pie>
                     <Tooltip />
                   </PieChart>
                 </ResponsiveContainer>
-
               </Card.Body>
             </Card>
           </Row>
@@ -84,11 +102,17 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                       animationDuration={500}
                       data={statsPerComplexity}
                       outerRadius={80}
-                      label={entry => getLabelTaskComplexity(entry.name as TaskComplexity)}
-                    >
-                      {
-                        statsPerComplexity.map((entry, index) => <Cell fill={getColorTaskComplexity(entry.complexity as TaskComplexity)} />)
+                      label={entry =>
+                        getLabelTaskComplexity(entry.name as TaskComplexity)
                       }
+                    >
+                      {statsPerComplexity.map((entry, index) => (
+                        <Cell
+                          fill={getColorTaskComplexity(
+                            entry.complexity as TaskComplexity
+                          )}
+                        />
+                      ))}
                     </Pie>
                     <Tooltip />
                   </PieChart>
@@ -102,7 +126,12 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
             <Card.Header>Por palavras-chave</Card.Header>
             <Card.Body>
               <ResponsiveContainer>
-                <Treemap data={statsPerKeywords} dataKey="count" stroke="#fff" animationDuration={500} />
+                <Treemap
+                  data={statsPerKeywords}
+                  dataKey="count"
+                  stroke="#fff"
+                  animationDuration={500}
+                />
               </ResponsiveContainer>
             </Card.Body>
           </Card>
