@@ -7,8 +7,9 @@ import { getAllTeams } from '../../../services/team';
 import TeamsDeck from './TeamsDeck';
 import SidebarContext from '../../../contexts/SidebarContext';
 import AddTeam from './AddTeam';
+import Skeleton from 'react-loading-skeleton';
 
-export interface ITeamsProps {}
+export interface ITeamsProps { }
 
 const Teams: React.FunctionComponent<ITeamsProps> = props => {
   const [teams, setTeams] = useState<ITeam[]>();
@@ -73,7 +74,7 @@ const Teams: React.FunctionComponent<ITeamsProps> = props => {
         </span>
       </div>
       <div className="people-list">
-        {!teamList && 'Obtendo dados...'}
+        {!teamList && <Skeleton height={70} count={3} />}
         <TeamsDeck teams={teamList} />
       </div>
     </>

@@ -7,6 +7,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddPerson from './AddPerson';
 import SidebarContext from '../../../contexts/SidebarContext';
 import PeopleDeck from './PeopleDeck';
+import Skeleton from 'react-loading-skeleton';
 
 export interface IPeopleProps { }
 
@@ -84,7 +85,7 @@ const People: React.FunctionComponent<IPeopleProps> = props => {
         </span>
       </div>
       <div className="people-list">
-        {!peopleList && 'Obtendo dados...'}
+        {!peopleList && <Skeleton height={70} count={3} />}
         <PeopleDeck people={peopleList} />
       </div>
     </>
