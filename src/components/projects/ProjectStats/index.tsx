@@ -14,6 +14,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   Treemap,
+  TooltipPayload,
+  TooltipProps,
 } from 'recharts';
 import { Container, Col, Card, Row } from 'react-bootstrap';
 import {
@@ -56,10 +58,60 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
     getStats(projectId!);
   }, [projectId]);
 
+  const CustomTooltipTasksByStatus = (data: TooltipProps) => {
+    if (data.active) {
+      const statusLabel: string = getLabelTaskStatus(
+        data!.payload![0].name as TaskStatus
+      );
+
+      return (
+        <div className="bg-light p-2 border">
+          <p className="label font-weight-bold">{statusLabel}</p>
+          <p className="intro">{data!.payload![0].value} tarefa(s)</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const CustomTooltipTasksByComplexity = (data: TooltipProps) => {
+    if (data.active) {
+      const complexityLabel: string = getLabelTaskComplexity(
+        data!.payload![0].name as TaskComplexity
+      );
+
+      return (
+        <div className="bg-light p-2 border">
+          <p className="label font-weight-bold">
+            {complexityLabel} complexidade
+          </p>
+          <p className="intro">{data!.payload![0].value} tarefa(s)</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const CustomTooltipTreeMapKeywords = (data: TooltipProps) => {
+    if (data.active) {
+      console.log(data!.payload![0]);
+      return (
+        <div className="bg-light p-2 border">
+          <p className="label font-weight-bold">{data!.payload![0].name}</p>
+          <p className="intro">{data!.payload![0].value} tarefa(s)</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <Container>
       <Row>
-        <Col md={6}>
+        <Col md={3}>
           <Row>
             <Card className="h-100 w-100">
               <Card.Header>
@@ -73,10 +125,8 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                       nameKey="status"
                       animationDuration={500}
                       data={statsPerStatus!}
+                      innerRadius={55}
                       outerRadius={80}
-                      label={entry =>
-                        getLabelTaskStatus(entry.name as TaskStatus)
-                      }
                     >
                       {statsPerStatus.map((entry, index) => (
                         <Cell
@@ -84,7 +134,7 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                         />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltipTasksByStatus />} />
                   </PieChart>
                 </ResponsiveContainer>
               </Card.Body>
@@ -101,10 +151,8 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                       nameKey="complexity"
                       animationDuration={500}
                       data={statsPerComplexity}
+                      innerRadius={55}
                       outerRadius={80}
-                      label={entry =>
-                        getLabelTaskComplexity(entry.name as TaskComplexity)
-                      }
                     >
                       {statsPerComplexity.map((entry, index) => (
                         <Cell
@@ -114,14 +162,14 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                         />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip content={<CustomTooltipTasksByComplexity />} />
                   </PieChart>
                 </ResponsiveContainer>
               </Card.Body>
             </Card>
           </Row>
         </Col>
-        <Col md={6}>
+        <Col md={8}>
           <Card className="h-100 w-100">
             <Card.Header>Por palavras-chave</Card.Header>
             <Card.Body>
@@ -129,9 +177,12 @@ const ProjectStats: React.FunctionComponent<IProjectStatsProps> = props => {
                 <Treemap
                   data={statsPerKeywords}
                   dataKey="count"
+                  nameKey="keyword"
                   stroke="#fff"
                   animationDuration={500}
-                />
+                >
+                  <Tooltip content={<CustomTooltipTreeMapKeywords />} />
+                </Treemap>
               </ResponsiveContainer>
             </Card.Body>
           </Card>

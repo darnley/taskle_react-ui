@@ -4,8 +4,9 @@ import { Container, Card, Button, ButtonGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import SidebarContext from '../../contexts/SidebarContext';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
-interface ISidebarProps {}
+interface ISidebarProps { }
 
 const Sidebar: FunctionComponent<ISidebarProps> = props => {
   const sidebarContext = useContext(SidebarContext);
@@ -57,7 +58,9 @@ const Sidebar: FunctionComponent<ISidebarProps> = props => {
             </Button>
           )}
         </Card.Text>
-        <Card.Body>{props.children}</Card.Body>
+        <Card.Body style={{ height: '80vh' }}>
+          <PerfectScrollbar>{props.children}</PerfectScrollbar>
+        </Card.Body>
       </Card>
     </>
   );

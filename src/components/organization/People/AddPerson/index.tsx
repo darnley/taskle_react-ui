@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import IFormDataAddPerson from '../../../../interfaces/forms/IFormDataAddPerson';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import classNames from 'classnames';
 import RBRef from '../../../../types/RBRef';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,6 +23,7 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
   const [selectedTeam, setSelectedTeam] = useState<ITeam>({ _id: '' } as ITeam);
   const [isAddingPerson, setIsAddingPerson] = useState(false);
   const { addToast } = useToasts();
+  const [addPersonErrorMessage, setAddPersonErrorMessage] = useState<string>();
 
   useEffect(() => {
     getAllTeams().then(res => {
@@ -47,7 +48,15 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
         }
       })
       .catch(err => {
-        console.error(err);
+        const responseMsg: string = err.response.data.errmsg;
+
+        if (responseMsg.includes('duplicate key')) {
+          setAddPersonErrorMessage(
+            'Já existe uma pessoa cadastrada com estes dados.'
+          );
+        } else {
+          setAddPersonErrorMessage('Ocorreu um erro ao criar a pessoa.');
+        }
       })
       .finally(() => {
         setIsAddingPerson(false);
@@ -60,6 +69,12 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
 
   return (
     <Form onSubmit={onSubmit}>
+      {addPersonErrorMessage && (
+        <Alert variant="danger">
+          <Alert.Heading>Oops!</Alert.Heading>
+          {addPersonErrorMessage}
+        </Alert>
+      )}
       <Form.Group controlId="firstName">
         <Form.Label>Primeiro nome</Form.Label>
         <Form.Control
@@ -166,6 +181,9 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
           )}
         ></Typeahead>
       </Form.Group>
+      <Alert variant="info">
+        A senha de acesso será enviada para o <strong>e-mail cadastrado</strong>
+      </Alert>
       <Button variant="success" type="submit" block disabled={isAddingPerson}>
         <FontAwesomeIcon icon={faPlus} /> Adicionar
       </Button>

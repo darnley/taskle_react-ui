@@ -59,12 +59,12 @@ export function getStatTaskComplexity(userId: string): Promise<IPersonStats[]> {
     authenticatedAxios
       .get<IPersonStats[]>(`/people/${userId}/stats/task-complexity`)
       .then(res => {
-        resolve(res.data)
+        resolve(res.data);
       })
       .catch(err => {
         reject(err);
-      })
-  })
+      });
+  });
 }
 
 export function getProjects(userId: string): Promise<IProject[]> {
@@ -80,6 +80,6 @@ export function getProjects(userId: string): Promise<IProject[]> {
       })
       .catch(err => {
         reject(err);
-      })
-  })
+      });
+  });
 }
