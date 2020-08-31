@@ -19,6 +19,7 @@ import Teams from './components/organization/Teams';
 import { ToastProvider } from 'react-toast-notifications';
 import ProjectTasks from './components/projects/ProjectTasks';
 import ProjectStats from './components/projects/ProjectStats';
+import PasswordReset from './components/authentication/PasswordReset';
 
 ReactDOM.render(
   <ToastProvider autoDismiss>
@@ -123,6 +124,11 @@ ReactDOM.render(
           )}
         />
         <PrivateRoute path={routeConfig.signOut} component={SignOut} />
+        <Route
+          path={routeConfig.passwordReset + '/:userId/:key1/:key2'}
+          exact={true}
+          component={PasswordReset}
+        />
         <Route path={routeConfig.signIn} exact={true} component={Login} />
         <Route path="/" exact={true} component={() => <Redirect to="home" />} />
       </Switch>
