@@ -83,3 +83,14 @@ export function getProjects(userId: string): Promise<IProject[]> {
       });
   });
 }
+
+export function updatePerson(personId: string, person: IUser): Promise<IUser> {
+  return new Promise<IUser>((resolve, reject) => {
+    authenticatedAxios
+      .put<IUser>(`/people/${personId}`, person)
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(reject);
+  });
+}
