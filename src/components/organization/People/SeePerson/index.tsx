@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { IUser } from '../../../../interfaces/IUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faShare, faShareAlt, faSearch, faPen } from '@fortawesome/free-solid-svg-icons';
+import {
+  faStar,
+  faShare,
+  faShareAlt,
+  faSearch,
+  faPen,
+} from '@fortawesome/free-solid-svg-icons';
 import IPersonStats from '../../../../interfaces/IPersonStats';
 import {
   getStatTaskComplexity,
@@ -96,12 +102,13 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
     <>
       <section id="see-person-bio" className="text-center">
         <small style={{ position: 'absolute', right: 0 }}>
-          <Button variant="light" type="button" size="sm">
-            <FontAwesomeIcon
-              icon={faPen}
-              title="Editar a pessoa"
-              onClick={() => handlePersonEditButtonClick(props.person._id)}
-            />
+          <Button
+            variant="light"
+            type="button"
+            size="sm"
+            onClick={() => handlePersonEditButtonClick(props.person._id)}
+          >
+            <FontAwesomeIcon icon={faPen} title="Editar a pessoa" />
           </Button>
         </small>
         <h3>
