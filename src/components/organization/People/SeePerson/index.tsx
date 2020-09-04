@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { IUser } from '../../../../interfaces/IUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faShare, faShareAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faShare, faShareAlt, faSearch, faPen } from '@fortawesome/free-solid-svg-icons';
 import IPersonStats from '../../../../interfaces/IPersonStats';
 import {
   getStatTaskComplexity,
@@ -21,7 +21,9 @@ import {
 import { getLabelTaskComplexity } from '../../../../utils/chart/labels';
 import TaskComplexity from '../../../../enums/TaskComplexity';
 import { getColorTaskComplexity } from '../../../../utils/chart/colors';
-import { Alert } from 'react-bootstrap';
+import { Alert, Button } from 'react-bootstrap';
+import SidebarContext from '../../../../contexts/SidebarContext';
+import AddPerson from '../AddPerson';
 
 export interface ISeePerson {
   person: IUser;
@@ -32,6 +34,7 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
     IPersonStats[]
   >([]);
   const [personProjects, setPersonProjects] = useState<IProject[]>([]);
+  const sidebarContext = useContext(SidebarContext);
 
   useEffect(() => {
     if (props.person?._id) {
@@ -44,6 +47,17 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
         .catch(console.error);
     }
   }, [props.person, props.person._id]);
+
+  const handlePersonEditButtonClick = (personId: string) => {
+    const handlePersonEditCallback = () => {
+      sidebarContext.removeSidebarComponent();
+      window.location.reload(false);
+    };
+
+    sidebarContext.setSidebarComponent(
+      <AddPerson personId={personId} onPersonAdded={handlePersonEditCallback} />
+    );
+  };
 
   const CustomTooltipTasksByComplexity = (data: TooltipProps) => {
     if (data.active) {
@@ -81,6 +95,15 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
   return (
     <>
       <section id="see-person-bio" className="text-center">
+        <small style={{ position: 'absolute', right: 0 }}>
+          <Button variant="light" type="button" size="sm">
+            <FontAwesomeIcon
+              icon={faPen}
+              title="Editar a pessoa"
+              onClick={() => handlePersonEditButtonClick(props.person._id)}
+            />
+          </Button>
+        </small>
         <h3>
           {props.person.starRatingCount}{' '}
           <span className="text-warning">
@@ -133,6 +156,7 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
                 >
                   {personStatsTaskComplexity.map((entry, index) => (
                     <Cell
+                      key={index}
                       fill={getColorTaskComplexity(
                         entry.name as TaskComplexity
                       )}

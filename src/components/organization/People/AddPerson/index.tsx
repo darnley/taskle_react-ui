@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import IFormDataAddPerson from '../../../../interfaces/forms/IFormDataAddPerson';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button, Alert, Badge } from 'react-bootstrap';
 import classNames from 'classnames';
 import RBRef from '../../../../types/RBRef';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faPen } from '@fortawesome/free-solid-svg-icons';
 import ITeam from '../../../../interfaces/ITeam';
 import { getAllTeams } from '../../../../services/team';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import { addPerson } from '../../../../services/people';
+import { addPerson, getPerson, updatePerson } from '../../../../services/people';
 import Role from '../../../../enums/Role';
 import { useToasts } from 'react-toast-notifications';
+import { IUser } from '../../../../interfaces/IUser';
 
 export interface IAddPersonProps {
+  personId?: string;
   onPersonAdded?: () => void;
 }
 
@@ -24,43 +26,88 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
   const [isAddingPerson, setIsAddingPerson] = useState(false);
   const { addToast } = useToasts();
   const [addPersonErrorMessage, setAddPersonErrorMessage] = useState<string>();
+  const [currentPerson, setCurrentPerson] = useState<IUser>();
+
+  const getCurrentPersonData = (personId: string) => {
+    getPerson(personId)
+      .then(setCurrentPerson)
+      .catch(console.error);
+  };
 
   useEffect(() => {
     getAllTeams().then(res => {
       setTeams(res);
     });
-  }, []);
+
+    if (props.personId) {
+      getCurrentPersonData(props.personId);
+    }
+  }, [props.personId]);
+
+  useEffect(() => {
+    const teamFound = teams.find(
+      t => t._id === currentPerson?.team._id
+    ) as ITeam;
+    setSelectedTeam(teamFound);
+  }, [currentPerson, teams]);
 
   const onSubmit = handleSubmit(data => {
     setIsAddingPerson(true);
 
-    data.password = '123';
-    data.role = Role.Normal;
+    if (!props.personId) {
+      data.password = '123';
+      data.role = Role.Normal;
 
-    addPerson(data)
-      .then(res => {
-        addToast(`${data.emailAddress} foi adicionado(a) com sucesso.`, {
-          appearance: 'success',
+      addPerson(data)
+        .then(res => {
+          addToast(`${data.emailAddress} foi adicionado(a) com sucesso.`, {
+            appearance: 'success',
+          });
+
+          if (props.onPersonAdded !== undefined) {
+            props.onPersonAdded();
+          }
+        })
+        .catch(err => {
+          const responseMsg: string = err.response.data.errmsg;
+
+          if (responseMsg.includes('duplicate key')) {
+            setAddPersonErrorMessage(
+              'Já existe uma pessoa cadastrada com estes dados.'
+            );
+          } else {
+            setAddPersonErrorMessage('Ocorreu um erro ao criar a pessoa.');
+          }
+        })
+        .finally(() => {
+          setIsAddingPerson(false);
         });
+    } else {
+      updatePerson(props.personId, data)
+        .then(res => {
+          addToast(`${data.emailAddress} foi alterado(a) com sucesso.`, {
+            appearance: 'success',
+          });
 
-        if (props.onPersonAdded !== undefined) {
-          props.onPersonAdded();
-        }
-      })
-      .catch(err => {
-        const responseMsg: string = err.response.data.errmsg;
+          if (props.onPersonAdded !== undefined) {
+            props.onPersonAdded();
+          }
+        })
+        .catch(err => {
+          const responseMsg: string = err.response.data.errmsg;
 
-        if (responseMsg.includes('duplicate key')) {
-          setAddPersonErrorMessage(
-            'Já existe uma pessoa cadastrada com estes dados.'
-          );
-        } else {
-          setAddPersonErrorMessage('Ocorreu um erro ao criar a pessoa.');
-        }
-      })
-      .finally(() => {
-        setIsAddingPerson(false);
-      });
+          if (responseMsg.includes('duplicate key')) {
+            setAddPersonErrorMessage(
+              'Já existe uma pessoa cadastrada com estes dados.'
+            );
+          } else {
+            setAddPersonErrorMessage('Ocorreu um erro ao criar a pessoa.');
+          }
+        })
+        .finally(() => {
+          setIsAddingPerson(false);
+        });
+    }
   });
 
   const handleTeamChange = (selectedTeam: ITeam[]) => {
@@ -91,6 +138,7 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="words"
+          defaultValue={props.personId ? currentPerson?.firstName : ''}
         />
       </Form.Group>
       <Form.Group controlId="lastName">
@@ -109,6 +157,7 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="words"
+          defaultValue={props.personId ? currentPerson?.lastName : ''}
         />
       </Form.Group>
       <Form.Group controlId="emailAddress">
@@ -127,6 +176,7 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
+          defaultValue={props.personId ? currentPerson?.emailAddress : ''}
         />
       </Form.Group>
       <Form.Group controlId="position">
@@ -145,6 +195,7 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="words"
+          defaultValue={props.personId ? currentPerson?.position : ''}
         />
       </Form.Group>
       <Form.Group controlId="team">
@@ -162,6 +213,11 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
           }
           value={selectedTeam?._id}
         ></Form.Control>
+        <div>
+          <Badge variant="secondary" className="mb-1">
+            {selectedTeam?.name}
+          </Badge>
+        </div>
         <Typeahead
           options={teams}
           labelKey="name"
@@ -185,7 +241,16 @@ const AddPerson: React.FunctionComponent<IAddPersonProps> = props => {
         A senha de acesso será enviada para o <strong>e-mail cadastrado</strong>
       </Alert>
       <Button variant="success" type="submit" block disabled={isAddingPerson}>
-        <FontAwesomeIcon icon={faPlus} /> Adicionar
+        {props.personId && (
+          <>
+            <FontAwesomeIcon icon={faPen} /> Editar
+          </>
+        )}
+        {!props.personId && (
+          <>
+            <FontAwesomeIcon icon={faPlus} /> Adicionar
+          </>
+        )}
       </Button>
     </Form>
   );
