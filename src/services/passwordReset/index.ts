@@ -17,3 +17,16 @@ export function resetPassword(
       .catch(reject);
   });
 }
+
+export function resetPasswordRequest(emailAddress: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    authenticatedAxios
+      .post(`/auth/password-reset`, {
+        emailAddress: emailAddress,
+      })
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(reject);
+  });
+}

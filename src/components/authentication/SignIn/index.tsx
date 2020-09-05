@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Auth from '../../../utils/authentication';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import routeConfig from '../../../routes.config';
 import HelmetConfig from '../../helmet/HelmetConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -88,8 +88,8 @@ const SignIn = ({ component, ...rest }) => {
                       {authError ? (
                         <span>{authError}</span>
                       ) : (
-                        <span>Ocorreu um problema ao autenticar você.</span>
-                      )}
+                          <span>Ocorreu um problema ao autenticar você.</span>
+                        )}
                     </Alert>
                     <hr />
                   </>
@@ -148,6 +148,9 @@ const SignIn = ({ component, ...rest }) => {
                 </Form>
               </Card.Body>
             </Card>
+            <div className="text-center mt-4">
+              <Link to="/auth/reset"><span>Caso tenha esquecido sua senha, clique aqui</span></Link>
+            </div>
           </Col>
         </Row>
       </Container>

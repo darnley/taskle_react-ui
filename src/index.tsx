@@ -21,6 +21,7 @@ import ProjectTasks from './components/projects/ProjectTasks';
 import ProjectStats from './components/projects/ProjectStats';
 import PasswordReset from './components/authentication/PasswordReset';
 import OrganizationStats from './components/organization/Stats';
+import PasswordResetRequest from './components/authentication/PasswordResetRequest';
 
 ReactDOM.render(
   <ToastProvider autoDismiss>
@@ -153,6 +154,11 @@ ReactDOM.render(
           component={PasswordReset}
         />
         <Route path={routeConfig.signIn} exact={true} component={Login} />
+        <Route
+          paht="/auth/reset"
+          exact={true}
+          component={PasswordResetRequest}
+        />
         <Route path="/" exact={true} component={() => <Redirect to="home" />} />
       </Switch>
     </BrowserRouter>
