@@ -20,6 +20,7 @@ import { ToastProvider } from 'react-toast-notifications';
 import ProjectTasks from './components/projects/ProjectTasks';
 import ProjectStats from './components/projects/ProjectStats';
 import PasswordReset from './components/authentication/PasswordReset';
+import OrganizationStats from './components/organization/Stats';
 
 ReactDOM.render(
   <ToastProvider autoDismiss>
@@ -88,6 +89,28 @@ ReactDOM.render(
                       title="Equipes"
                       key={2}
                       children={<Teams />}
+                    />,
+                  ]}
+                />
+              }
+            />
+          )}
+        />
+        <PrivateRoute
+          path="/organization/stats"
+          exact={true}
+          component={() => (
+            <App
+              middleComponent={
+                <Page
+                  name="Minha organização"
+                  defaultTab="org-stats"
+                  tabs={[
+                    <Tab
+                      eventKey="org-stats"
+                      title="Estatísticas"
+                      key={1}
+                      children={<OrganizationStats />}
                     />,
                   ]}
                 />
