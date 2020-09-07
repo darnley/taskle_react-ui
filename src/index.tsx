@@ -155,7 +155,7 @@ ReactDOM.render(
         />
         <Route path={routeConfig.signIn} exact={true} component={Login} />
         <Route
-          paht="/auth/reset"
+          path={routeConfig.passwordResetRequest}
           exact={true}
           component={PasswordResetRequest}
         />

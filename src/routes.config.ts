@@ -6,6 +6,7 @@ const routeConfig = {
   signOut: '/auth/signout',
   tokenVerify: '/auth/verify',
   passwordReset: '/auth/passwordreset',
+  passwordResetRequest: '/auth/reset',
   // Profile
   myProfile: '/me/profile',
 };

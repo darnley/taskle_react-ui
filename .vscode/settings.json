@@ -1,6 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "debug.node.autoAttach": "on",
+  "debug.node.autoAttach": "off",
   "editor.tabSize": 4,
   "[javascript]": {
     "editor.tabSize": 2
