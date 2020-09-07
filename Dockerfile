@@ -11,12 +11,8 @@ RUN apt-get install -y build-essential
 
 COPY . .
 
-RUN yarn global add rimraf
-
 RUN yarn install --frozen-lock
 RUN yarn build
-
-RUN ls /home/app
 
 # APPLICATION EXECUTION
 
