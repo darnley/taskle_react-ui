@@ -70,7 +70,7 @@ const AddTeam: React.FunctionComponent<IAddTeamProps> = props => {
   return (
     <Form onSubmit={onSubmit}>
       <Form.Group controlId="name">
-        <Form.Label>Nome do time</Form.Label>
+        <Form.Label>Nome da equipe</Form.Label>
         <Form.Control
           type="text"
           name="name"
