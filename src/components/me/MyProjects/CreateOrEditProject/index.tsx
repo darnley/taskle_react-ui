@@ -27,7 +27,7 @@ import {
   updateProject,
 } from '../../../../services/project';
 import ITeam from '../../../../interfaces/ITeam';
-import { getAllTeams } from '../../../../services/team';
+import { getAllTeams, getTeamPeople } from '../../../../services/team';
 import SidebarContext from '../../../../contexts/SidebarContext';
 import FinishProject from '../FinishProject';
 
@@ -48,6 +48,7 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
   const [project, setProject] = useState<IProject>();
   const [people, setPeople] = useState<IUser[]>([]);
   const [teams, setTeams] = useState<ITeam[]>([]);
+  const [teamsPeople, setTeamsPeople] = useState<any>(null);
   const [selectedResponsible, setSelectedResponsible] = useState<IUser>();
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const [selectedPeople, setSelectedPeople] = useState<IUser[]>([]);
@@ -140,6 +141,16 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
           };
 
           return vis;
+        });
+
+        setTeamsPeople({});
+
+        res.forEach(async team => {
+          const people = await getTeamPeople(team._id);
+          setTeamsPeople(oldObject => {
+            oldObject[team._id] = people;
+            return oldObject;
+          })
         });
 
         setEntireVisibility(previousVisibility => [
@@ -547,8 +558,7 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
                 <small>
                   {option.type === 'person'
                     ? people.find(p => p._id === option._id)?.emailAddress
-                    : teams.find(t => t._id === option._id)?.users.length +
-                      ' pessoa(s)'}
+                    : (teamsPeople[option._id].length ?? 0) + ' pessoa(s)'}
                 </small>
               </div>
             )}

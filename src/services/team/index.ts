@@ -64,6 +64,21 @@ export function getTeamPeople(teamId: string): Promise<IUser[]> {
   });
 }
 
+export function getTeamPeopleCount(teamId: string): Promise<number> {
+  if (!teamId) {
+    throw Error("Param 'teamId' is required.");
+  }
+
+  return new Promise<number>((resolve, reject) => {
+    authenticatedAxios
+      .get<{ peopleCount: number }>(`/teams/${teamId}/people-count`)
+      .then(res => {
+        resolve(res.data.peopleCount);
+      })
+      .catch(reject);
+  });
+}
+
 export function updateTeam(teamId: string, team: ITeam): Promise<ITeam> {
   if (!teamId) {
     throw Error("Param 'teamId' is required.");
