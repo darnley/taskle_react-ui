@@ -11,3 +11,14 @@ export function getOrganizationStats(): Promise<IOrganizationStatistics> {
       .catch(reject);
   });
 }
+
+export function getPeopleCount(): Promise<number> {
+  return new Promise<number>((resolve, reject) => {
+    authenticatedAxios
+      .get(`/org/stats/people-count`)
+      .then(res => {
+        resolve(res.data.peopleCount);
+      })
+      .catch(reject);
+  });
+}

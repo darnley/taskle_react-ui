@@ -20,6 +20,7 @@ import Skeleton from 'react-loading-skeleton';
 import getMyProjects from '../../services/me/getMyProjects';
 import { getMyTasks } from '../../services/me';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getPeopleCount } from '../../services/organization';
 
 export interface IMenuProps { }
 
@@ -29,7 +30,7 @@ const Menu: FunctionComponent<IMenuProps> = props => {
 
   const [projectCount, setProjectCount] = useState(-1);
   const [taskCount, setTaskCount] = useState(-1);
-  const [peopleCount, setPeopleCount] = useState(15);
+  const [peopleCount, setPeopleCount] = useState(-1);
 
   useEffect(() => {
     getMyProjects()
@@ -38,7 +39,11 @@ const Menu: FunctionComponent<IMenuProps> = props => {
 
     getMyTasks()
       .then(res => setTaskCount(res.length))
-      .catch(console.error)
+      .catch(console.error);
+
+    getPeopleCount()
+      .then(res => setPeopleCount(res))
+      .catch(console.error);
   }, [])
 
   return (
@@ -87,7 +92,7 @@ const Menu: FunctionComponent<IMenuProps> = props => {
                   href="/organization"
                   text="Pessoas"
                   icon={faPeopleCarry}
-                  number={145}
+                  number={peopleCount}
                 />
                 <MenuSectionItem
                   href="/organization/stats"
