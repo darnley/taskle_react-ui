@@ -35,7 +35,11 @@ const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
 
   const handleCreateProjectClick = (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    sidebarContext.setSidebarComponent(<CreateOrEditProject />);
+    sidebarContext.setSidebarComponent(
+      <CreateOrEditProject
+        onSuccess={() => sidebarContext.removeSidebarComponent()}
+      />
+    );
   };
 
   useMemo(() => {

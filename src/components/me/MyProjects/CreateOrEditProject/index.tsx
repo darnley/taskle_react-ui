@@ -65,6 +65,7 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
     isKeywordManuallyAddedToArray,
     setIsKeywordManuallyAddedToArray,
   ] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
 
   useEffect(() => {
     if (props.projectId) {
@@ -215,6 +216,8 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
   }, [selectedPeople]);
 
   const onSubmit = handleSubmit(data => {
+    setIsSubmiting(true);
+
     data.keywords = selectedKeywords.filter(
       (v, i) => selectedKeywords.indexOf(v) === i
     );
@@ -253,7 +256,8 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
               appearance: 'error',
             }
           );
-        });
+        })
+        .finally(() => setIsSubmiting(false));
     } else {
       delete data._id;
 
@@ -277,7 +281,8 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
               appearance: 'error',
             }
           );
-        });
+        })
+        .finally(() => setIsSubmiting(false));
     }
   });
 
@@ -564,7 +569,7 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
             )}
           />
         </Form.Group>
-        <Button type="submit" variant="success" block>
+        <Button type="submit" variant="success" block disabled={isSubmiting}>
           {props.projectId && 'Editar projeto'}
           {!props.projectId && 'Criar projeto'}
         </Button>
