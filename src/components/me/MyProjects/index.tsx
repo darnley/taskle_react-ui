@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CreateOrEditProject from './CreateOrEditProject';
 import Skeleton from 'react-loading-skeleton';
+import { ppid } from 'process';
+import ProjectStatus from '../../../enums/ProjectStatus';
 
 interface IMyProjectsProps { }
 
@@ -16,6 +18,9 @@ const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
   const [myProjects, setMyProjects] = useState<IProject[]>();
   const [myProjectsList, setMyProjectsList] = useState<IProject[]>();
   const [searchProject, setSearchProject] = useState('');
+  const [showFinishedProjects, setShowFinishdProjects] = useState<boolean>(
+    false
+  );
 
   useMemo(() => {
     getMyProjects().then(res => {
@@ -76,10 +81,37 @@ const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
       <div className="project-list">
         {!myProjects && <Skeleton count={4} height={100} />}
         {myProjectsList &&
-          myProjectsList.map((project, index, array) => (
-            <ProjectItem project={project} key={`project-${index}`} />
-          ))}
+          myProjectsList
+            .filter(p => p.status !== ProjectStatus.Ended)
+            .map((project, index, array) => (
+              <ProjectItem project={project} key={`project-${index}`} />
+            ))}
       </div>
+      {myProjectsList &&
+        myProjectsList?.filter(p => p.status === ProjectStatus.Ended).length >
+        0 && (
+          <>
+            <div className="mt-2 mb-2">
+              Projetos encerrados{' '}
+              <Button
+                type="button"
+                variant="light"
+                size="sm"
+                onClick={() => setShowFinishdProjects(!showFinishedProjects)}
+              >
+                {showFinishedProjects && 'Esconder'}
+                {!showFinishedProjects && 'Mostrar'}
+              </Button>
+            </div>
+            {showFinishedProjects &&
+              myProjectsList &&
+              myProjectsList
+                .filter(p => p.status === ProjectStatus.Ended)
+                .map((project, index, array) => (
+                  <ProjectItem project={project} key={`project-${index}`} />
+                ))}
+          </>
+        )}
     </>
   );
 };
