@@ -35,8 +35,6 @@ const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
   };
 
   const renderTooltipNotStarted = (props: any) => {
-    console.log(props);
-
     return (
       <Tooltip id="button-tooltip" {...props}>
         Não iniciada
@@ -45,8 +43,6 @@ const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
   };
 
   const renderTooltipStarted = (props: any) => {
-    console.log(props);
-
     return (
       <Tooltip id="button-tooltip" {...props}>
         Iniciada
@@ -55,8 +51,6 @@ const TaskStatusIcon: React.FunctionComponent<ITaskStatusIconProps> = props => {
   };
 
   const renderTooltipFinished = (props: any) => {
-    console.log(props);
-
     return (
       <Tooltip id="button-tooltip" {...props}>
         Finalizada
