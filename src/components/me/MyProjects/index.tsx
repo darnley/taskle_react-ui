@@ -45,7 +45,7 @@ const MyProjects: FunctionComponent<IMyProjectsProps> = props => {
   useMemo(() => {
     if (searchProject.trim().length > 0) {
       const found = myProjects?.filter(project =>
-        project.description
+        project.name
           ?.toLocaleLowerCase()
           .includes(searchProject.toLocaleLowerCase())
       );
