@@ -20,6 +20,8 @@ import {
 } from 'react-bootstrap';
 import RBRef from '../../../types/RBRef';
 import classNames from 'classnames';
+import logo from '../../../logo.svg';
+import './styles.scss';
 
 interface IFormLoginData {
   username: string;
@@ -75,6 +77,9 @@ const SignIn = ({ component, ...rest }) => {
         <HelmetConfig title="Autenticação" />
         <Row className="align-items-center w-100">
           <Col md={{ span: 4, offset: 4 }}>
+            <div className="signin-logo text-center w-100 mb-4">
+              <img src={logo} alt="Taskle" />
+            </div>
             <Card>
               <Card.Body>
                 {showAlert && authError.length > 0 && (
