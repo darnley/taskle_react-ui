@@ -162,6 +162,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
           <Col md={7} className="project-task-middle-data">
             <Row className="project-task-top">
               <span className="task-complexity">
+                <small className="text-muted mr-1">Complexidade</small>
                 <TaskComplexityIcon complexity={task.complexity} width="30em" />
               </span>
               {props.showAsMyTasks && (
@@ -174,9 +175,8 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
                     <>
                       <span className="project-milestone-separator"> / </span>
                       <Link
-                        to={`/projects/${
-                          task.project._id
-                        }#milestone-${task.milestone.toLowerCase()}`}
+                        to={`/projects/${task.project._id
+                          }#milestone-${task.milestone.toLowerCase()}`}
                       >
                         {task.milestone}
                       </Link>
@@ -256,9 +256,8 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
                 variant="link"
                 disabled={task.project.status === ProjectStatus.Ended}
                 onClick={toggleTaskFlag}
-                className={`h-100 float-right mr-1 task-flag${
-                  task.isFlagged ? ' task-is-flagged' : ' task-is-not-flagged'
-                }`}
+                className={`h-100 float-right mr-1 task-flag${task.isFlagged ? ' task-is-flagged' : ' task-is-not-flagged'
+                  }`}
               >
                 <FontAwesomeIcon icon={faFlag} />
               </Button>
