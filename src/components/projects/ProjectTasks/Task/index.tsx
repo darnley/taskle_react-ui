@@ -73,6 +73,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
 
       updateTask(task.project._id, task._id, currentTask).then(() => {
         setTask(currentTask);
+        if (props.updateFunc) props.updateFunc();
       });
     });
   };
@@ -90,6 +91,7 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
 
       setTask({ ...currentTask, project: task.project });
       addToast('A tarefa foi finalizada.', { appearance: 'success' });
+      if (props.updateFunc) props.updateFunc();
     });
   };
 
@@ -119,6 +121,8 @@ const Task: React.FunctionComponent<ITaskProps> = props => {
               </span>,
               { appearance: 'success' }
             );
+
+            if (props.updateFunc) props.updateFunc();
           })
           .catch(err => {
             console.error(err);

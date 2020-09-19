@@ -15,6 +15,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Task from '../../projects/ProjectTasks/Task';
 import { getMyTasks } from '../../../services/me';
 import Skeleton from 'react-loading-skeleton';
+import TaskStatus from '../../../enums/TaskStatus';
 
 interface IMyTasksProps { }
 
@@ -22,6 +23,7 @@ const MyTasks: FunctionComponent<IMyTasksProps> = props => {
   const [tasks, setTasks] = useState<ITask[]>();
   const [areTasksGot, setAreTasksGot] = useState<boolean>(false);
   const sidebarContext = useContext(SidebarContext);
+  const [showFinishedTasks, setShowFinishedTasks] = useState<boolean>(false);
 
   useEffect(() => {
     updateTaskList();
@@ -41,18 +43,53 @@ const MyTasks: FunctionComponent<IMyTasksProps> = props => {
     sidebarContext.removeSidebarComponent();
   };
 
+  const toggleShowFinishedTasks = () =>
+    setShowFinishedTasks(!showFinishedTasks);
+
   return (
     <Container fluid>
       <Row className="project-tasks-list mt-3">
         {!areTasksGot && <Skeleton height={110} count={3} />}
-        {tasks?.map(task => (
-          <Task
-            task={task}
-            key={task._id}
-            updateFunc={taskCallback}
-            showAsMyTasks
-          />
-        ))}
+        {tasks
+          ?.filter(t => t.status !== TaskStatus.Finished)
+          .map(task => (
+            <Task
+              task={task}
+              key={task._id}
+              updateFunc={taskCallback}
+              showAsMyTasks
+            />
+          ))}
+        {tasks &&
+          tasks?.filter(t => t.status === TaskStatus.Finished).length > 0 && (
+            <>
+              <hr className="mt-2" />
+              <div className="mt-2">
+                Tarefas concluídas
+                <Button
+                  type="button"
+                  variant="light"
+                  size="sm"
+                  className="ml-2"
+                  onClick={() => toggleShowFinishedTasks()}
+                >
+                  {showFinishedTasks && 'Esconder'}
+                  {!showFinishedTasks && 'Mostrar'}
+                </Button>
+              </div>
+              {showFinishedTasks &&
+                tasks
+                  ?.filter(t => t.status === TaskStatus.Finished)
+                  .map(task => (
+                    <Task
+                      task={task}
+                      key={task._id}
+                      updateFunc={taskCallback}
+                      showAsMyTasks
+                    />
+                  ))}
+            </>
+          )}
       </Row>
     </Container>
   );
