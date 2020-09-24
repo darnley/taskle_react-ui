@@ -49,7 +49,7 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
         .then(setPersonStatsTaskComplexity)
         .catch(console.error);
 
-      getProjects(props.person._id)
+      getProjects(props.person._id, monthHistory)
         .then(setPersonProjects)
         .catch(console.error);
     }

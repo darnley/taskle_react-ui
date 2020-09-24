@@ -72,14 +72,19 @@ export function getStatTaskComplexity(
   });
 }
 
-export function getProjects(userId: string): Promise<IProject[]> {
+export function getProjects(
+  userId: string,
+  monthHistory: number = -1
+): Promise<IProject[]> {
   if (!userId) {
     throw Error("Param 'userId' is required");
   }
 
   return new Promise<IProject[]>((resolve, reject) => {
     authenticatedAxios
-      .get<IProject[]>(`/people/${userId}/projects`)
+      .get<IProject[]>(
+        `/people/${userId}/projects?monthHistory=${monthHistory}`
+      )
       .then(res => {
         resolve(res.data);
       })
