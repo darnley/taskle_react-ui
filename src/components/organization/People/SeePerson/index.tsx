@@ -41,10 +41,11 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
   >([]);
   const [personProjects, setPersonProjects] = useState<IProject[]>([]);
   const sidebarContext = useContext(SidebarContext);
+  const [monthHistory, setMonthHistory] = useState<number>(12);
 
   useEffect(() => {
     if (props.person?._id) {
-      getStatTaskComplexity(props.person._id)
+      getStatTaskComplexity(props.person._id, monthHistory)
         .then(setPersonStatsTaskComplexity)
         .catch(console.error);
 
@@ -52,7 +53,7 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
         .then(setPersonProjects)
         .catch(console.error);
     }
-  }, [props.person, props.person._id]);
+  }, [monthHistory, props.person, props.person._id]);
 
   const handlePersonEditButtonClick = (personId: string) => {
     const handlePersonEditCallback = () => {

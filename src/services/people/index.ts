@@ -50,14 +50,19 @@ export function getPerson(userId: string): Promise<IUser> {
   });
 }
 
-export function getStatTaskComplexity(userId: string): Promise<IPersonStats[]> {
+export function getStatTaskComplexity(
+  userId: string,
+  monthHistory: number = -1
+): Promise<IPersonStats[]> {
   if (!userId) {
     throw Error("Param 'userId' is required");
   }
 
   return new Promise<IPersonStats[]>((resolve, reject) => {
     authenticatedAxios
-      .get<IPersonStats[]>(`/people/${userId}/stats/task-complexity`)
+      .get<IPersonStats[]>(
+        `/people/${userId}/stats/task-complexity?monthHistory=${monthHistory}`
+      )
       .then(res => {
         resolve(res.data);
       })
