@@ -12,6 +12,7 @@ import IPersonStats from '../../../../interfaces/IPersonStats';
 import {
   getStatTaskComplexity,
   getProjects,
+  getPersonKeywords,
 } from '../../../../services/people';
 import IProject from '../../../../interfaces/IProject';
 import {
@@ -30,6 +31,7 @@ import { getColorTaskComplexity } from '../../../../utils/chart/colors';
 import { Alert, Button } from 'react-bootstrap';
 import SidebarContext from '../../../../contexts/SidebarContext';
 import AddPerson from '../AddPerson';
+import IUserKeyword from '../../../../interfaces/IUserKeyword';
 
 export interface ISeePerson {
   person: IUser;
@@ -41,7 +43,8 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
   >([]);
   const [personProjects, setPersonProjects] = useState<IProject[]>([]);
   const sidebarContext = useContext(SidebarContext);
-  const [monthHistory, setMonthHistory] = useState<number>(12);
+  const [monthHistory, setMonthHistory] = useState<number>(5);
+  const [personKeywords, setPersonKeywords] = useState<IUserKeyword[]>([]);
 
   useEffect(() => {
     if (props.person?._id) {
@@ -51,6 +54,10 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
 
       getProjects(props.person._id, monthHistory)
         .then(setPersonProjects)
+        .catch(console.error);
+
+      getPersonKeywords(props.person._id, monthHistory)
+        .then(setPersonKeywords)
         .catch(console.error);
     }
   }, [monthHistory, props.person, props.person._id]);
@@ -186,11 +193,11 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
         <hr />
         <div>
           <span>Palavras-chaves mais concluídas</span>
-          {props.person.keywords && props.person.keywords.length > 0 && (
+          {personKeywords && personKeywords.length > 0 && (
             <span>
               <ResponsiveContainer height={400} width="100%">
                 <Treemap
-                  data={props.person.keywords}
+                  data={personKeywords}
                   nameKey="name"
                   dataKey="count"
                   stroke="#fff"
@@ -202,7 +209,7 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
               </ResponsiveContainer>
             </span>
           )}
-          {(!props.person.keywords || props.person.keywords.length === 0) && (
+          {(!personKeywords || personKeywords.length === 0) && (
             <Alert variant="light">
               <FontAwesomeIcon icon={faSearch} className="mr-1" />
               Não há dados suficientes

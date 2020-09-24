@@ -2,6 +2,7 @@ import { IUser } from '../../interfaces/IUser';
 import authenticatedAxios from '../authenticatedAxios';
 import IPersonStats from '../../interfaces/IPersonStats';
 import IProject from '../../interfaces/IProject';
+import IUserKeyword from '../../interfaces/IUserKeyword';
 
 export function getAllPeople(): Promise<IUser[]> {
   return new Promise<IUser[]>((resolve, reject) => {
@@ -103,4 +104,18 @@ export function updatePerson(personId: string, person: IUser): Promise<IUser> {
       })
       .catch(reject);
   });
+}
+
+export function getPersonKeywords(
+  personId: string,
+  monthHistory: number = -1
+): Promise<IUserKeyword[]> {
+  return new Promise<IUserKeyword[]>((resolve, reject) => {
+    authenticatedAxios
+      .get(`/people/${personId}/keywords?monthHistory=${monthHistory}`)
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(reject);
+  })
 }
