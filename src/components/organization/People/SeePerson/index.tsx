@@ -7,6 +7,7 @@ import {
   faShareAlt,
   faSearch,
   faPen,
+  faCalendar, faCalendarAlt
 } from '@fortawesome/free-solid-svg-icons';
 import IPersonStats from '../../../../interfaces/IPersonStats';
 import {
@@ -28,7 +29,7 @@ import {
 import { getLabelTaskComplexity } from '../../../../utils/chart/labels';
 import TaskComplexity from '../../../../enums/TaskComplexity';
 import { getColorTaskComplexity } from '../../../../utils/chart/colors';
-import { Alert, Button } from 'react-bootstrap';
+import { Alert, Button, Form, FormControlProps } from 'react-bootstrap';
 import SidebarContext from '../../../../contexts/SidebarContext';
 import AddPerson from '../AddPerson';
 import IUserKeyword from '../../../../interfaces/IUserKeyword';
@@ -43,7 +44,7 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
   >([]);
   const [personProjects, setPersonProjects] = useState<IProject[]>([]);
   const sidebarContext = useContext(SidebarContext);
-  const [monthHistory, setMonthHistory] = useState<number>(5);
+  const [monthHistory, setMonthHistory] = useState<number>(12);
   const [personKeywords, setPersonKeywords] = useState<IUserKeyword[]>([]);
 
   useEffect(() => {
@@ -71,6 +72,14 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
     sidebarContext.setSidebarComponent(
       <AddPerson personId={personId} onPersonAdded={handlePersonEditCallback} />
     );
+  };
+
+  const handleMonthHistoryChange = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const value: number = event.currentTarget.valueAsNumber ?? 1;
+
+    setMonthHistory(value);
   };
 
   const CustomTooltipTasksByComplexity = (data: TooltipProps) => {
@@ -149,8 +158,30 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
           </small>
         </div>
       </section>
-      <hr />
+      <hr className="mb-1" />
       <section className="text-center">
+        <div>
+          <Form className="text-left">
+            <Form.Group controlId="formMonthHistory" className="mb-2">
+              <Form.Label className="text-muted mb-0">
+                <small>
+                  <FontAwesomeIcon icon={faCalendarAlt} className="mr-1" />
+                  Meses a visualizar
+                </small>
+              </Form.Label>
+              <Form.Control
+                type="number"
+                size="sm"
+                min={2}
+                max={36}
+                required
+                defaultValue={monthHistory}
+                onChange={handleMonthHistoryChange}
+              />
+            </Form.Group>
+          </Form>
+        </div>
+        <hr className="mb-1 mt-1" />
         <div>
           <small>
             <FontAwesomeIcon icon={faShareAlt} className="mr-1" />
