@@ -80,6 +80,11 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
                     <i className="text-muted">Sem descrição</i>
                   </div>
                 )}
+                {props.project.description && (
+                  <div>
+                    {props.project.description}
+                  </div>
+                )}
               </Row>
               <Row className="project-info text-muted">
                 <small>
@@ -105,10 +110,10 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
                             value.status === TaskStatus.NotStarted
                               ? 'warning'
                               : value.status === TaskStatus.Started
-                              ? 'info'
-                              : value.status === TaskStatus.Finished
-                              ? 'success'
-                              : undefined
+                                ? 'info'
+                                : value.status === TaskStatus.Finished
+                                  ? 'success'
+                                  : undefined
                           }
                           now={value.count}
                           max={taskCountStatusTotals}
@@ -117,10 +122,10 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
                             value.status === TaskStatus.NotStarted
                               ? 'Não iniciadas'
                               : value.status === TaskStatus.Started
-                              ? 'Iniciadas'
-                              : value.status === TaskStatus.Finished
-                              ? 'Finalizadas'
-                              : undefined
+                                ? 'Iniciadas'
+                                : value.status === TaskStatus.Finished
+                                  ? 'Finalizadas'
+                                  : undefined
                           }
                         />
                       ))}
@@ -172,16 +177,16 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
               </Link>
               {(props.project.manager as IUser)._id ===
                 userInfoContext.user?._id && (
-                <Button
-                  variant="outline-primary"
-                  className="h-100 float-right"
-                  title="Editar o projeto"
-                  onClick={handleProjectEditClick}
-                  disabled={props.project.status === ProjectStatus.Ended}
-                >
-                  <FontAwesomeIcon icon={faPen} />
-                </Button>
-              )}
+                  <Button
+                    variant="outline-primary"
+                    className="h-100 float-right"
+                    title="Editar o projeto"
+                    onClick={handleProjectEditClick}
+                    disabled={props.project.status === ProjectStatus.Ended}
+                  >
+                    <FontAwesomeIcon icon={faPen} />
+                  </Button>
+                )}
             </Col>
           </Row>
         </Card.Body>

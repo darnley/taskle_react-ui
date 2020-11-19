@@ -229,6 +229,8 @@ const CreateOrEditProject: FunctionComponent<ICreateProjectProps> = props => {
       teams: [],
     } as IProjectVisibility;
 
+    data.description = project?.description;
+
     if (selectedPeople) data.visibility.users = selectedPeople;
     else data.visibility.users = [];
 
