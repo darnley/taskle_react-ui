@@ -23,6 +23,7 @@ import { IProjectTaskCountStats } from '../../../../interfaces/IProjectTaskCount
 import { getTaskCount } from '../../../../services/project/stats';
 import Skeleton from 'react-loading-skeleton';
 import TaskStatus from '../../../../enums/TaskStatus';
+import { getProject } from '../../../../services/project';
 
 export interface IProjectItemProps {
   project: IProject;
@@ -34,6 +35,7 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
 
   const [taskCount, setTaskCount] = useState<IProjectTaskCountStats>();
   const [taskCountStatusTotals, setTaskCountStatusTotals] = useState<number>();
+  const [project, setProject] = useState<IProject>({} as IProject);
 
   const handleProjectEditClick = () => {
     sidebarContext.removeSidebarComponent();
@@ -47,6 +49,7 @@ const ProjectItem: React.FunctionComponent<IProjectItemProps> = props => {
 
   const onProjectCreateOrEdit = () => {
     sidebarContext.removeSidebarComponent();
+    window.location.reload();
   };
 
   useEffect(() => {
