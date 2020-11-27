@@ -61,7 +61,7 @@ const TeamsItem: React.FunctionComponent<ITeamsItemProps> = props => {
             <Button
               variant="primary"
               className="h-100 float-right ml-1"
-              title="Ver o projeto"
+              title="Ver a equipe"
               onClick={() => handleSeeTeamClick(props.team)}
             >
               <FontAwesomeIcon icon={faEye} />
