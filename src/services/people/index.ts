@@ -4,10 +4,10 @@ import IPersonStats from '../../interfaces/IPersonStats';
 import IProject from '../../interfaces/IProject';
 import IUserKeyword from '../../interfaces/IUserKeyword';
 
-export function getAllPeople(): Promise<IUser[]> {
+export function getAllPeople(showOnlyActive: boolean = true): Promise<IUser[]> {
   return new Promise<IUser[]>((resolve, reject) => {
     authenticatedAxios
-      .get<IUser[]>('/people')
+      .get<IUser[]>(`/people${showOnlyActive ? '?isActive=true' : ''}`)
       .then(res => {
         resolve(res.data);
       })
