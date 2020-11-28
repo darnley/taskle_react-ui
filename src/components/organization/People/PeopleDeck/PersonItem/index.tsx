@@ -7,6 +7,7 @@ import './styles.scss';
 import { Link } from 'react-router-dom';
 import SidebarContext from '../../../../../contexts/SidebarContext';
 import SeePerson from '../../SeePerson';
+import classNames from 'classnames';
 
 export interface IPersonItemProps {
   person: IUser;
@@ -25,7 +26,11 @@ const PersonItem: React.FunctionComponent<IPersonItemProps> = props => {
         <Card.Body>
           <Row className="h-100">
             <Col md={5}>
-              <div className="person-name font-weight-bold">
+              <div className={classNames({
+                'person-name': true,
+                'font-weight-bold': true,
+                'text-danger': !props.person.isActive
+              })}>
                 {props.person.firstName + ' ' + props.person.lastName}
                 <a
                   href={`mailto:${props.person.emailAddress}`}

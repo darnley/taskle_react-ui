@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { IUser } from '../../../interfaces/IUser';
 import { getAllPeople } from '../../../services/people';
-import { InputGroup, FormControl, Button } from 'react-bootstrap';
+import { InputGroup, FormControl, Button, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddPerson from './AddPerson';
@@ -20,16 +20,17 @@ const People: React.FunctionComponent<IPeopleProps> = props => {
   const sidebarContext = useContext(SidebarContext);
   const [refreshCount, setRefreshCount] = useState(0);
   const [currentLoggedUser, setCurrentLoggedUser] = useState<IUser>();
+  const [showOnlyActive, setShowOnlyActive] = useState<boolean>(true);
 
   useEffect(() => {
-    getAllPeople().then(people => {
+    getAllPeople(showOnlyActive).then(people => {
       setPeople(people);
       setPeopleList(people);
     });
 
     getAuthenticatedUser()
       .then(setCurrentLoggedUser);
-  }, [refreshCount]);
+  }, [refreshCount, showOnlyActive]);
 
   const onPersonAdded = () => {
     sidebarContext.removeSidebarComponent();
@@ -89,6 +90,9 @@ const People: React.FunctionComponent<IPeopleProps> = props => {
             Adicionar pessoa
           </Button>
         </span>
+      </div>
+      <div className="mb-2">
+        <Form.Check type="checkbox" label="Mostrar somente ativos" defaultChecked={showOnlyActive} onChange={() => setShowOnlyActive(!showOnlyActive)} />
       </div>
       <div className="people-list">
         {!peopleList && <Skeleton height={70} count={3} />}
