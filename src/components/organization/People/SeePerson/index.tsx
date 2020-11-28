@@ -33,6 +33,8 @@ import { Alert, Button, Form, FormControlProps } from 'react-bootstrap';
 import SidebarContext from '../../../../contexts/SidebarContext';
 import AddPerson from '../AddPerson';
 import IUserKeyword from '../../../../interfaces/IUserKeyword';
+import getAuthenticatedUser from '../../../../services/user/getAuthenticatedUser';
+import Role from '../../../../enums/Role';
 
 export interface ISeePerson {
   person: IUser;
@@ -46,8 +48,12 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
   const sidebarContext = useContext(SidebarContext);
   const [monthHistory, setMonthHistory] = useState<number>(12);
   const [personKeywords, setPersonKeywords] = useState<IUserKeyword[]>([]);
+  const [currentLoggedUser, setCurrentLoggedUser] = useState<IUser>();
 
   useEffect(() => {
+    getAuthenticatedUser()
+      .then(setCurrentLoggedUser);
+
     if (props.person?._id) {
       getStatTaskComplexity(props.person._id, monthHistory)
         .then(setPersonStatsTaskComplexity)
@@ -119,14 +125,15 @@ const SeePerson: React.FunctionComponent<ISeePerson> = props => {
     <>
       <section id="see-person-bio" className="text-center">
         <small style={{ position: 'absolute', right: 0 }}>
-          <Button
-            variant="light"
-            type="button"
-            size="sm"
-            onClick={() => handlePersonEditButtonClick(props.person._id)}
-          >
-            <FontAwesomeIcon icon={faPen} title="Editar a pessoa" />
-          </Button>
+          {currentLoggedUser?.role === Role.Super &&
+            <Button
+              variant="light"
+              type="button"
+              size="sm"
+              onClick={() => handlePersonEditButtonClick(props.person._id)}
+            >
+              <FontAwesomeIcon icon={faPen} title="Editar a pessoa" />
+            </Button>}
         </small>
         <h3>
           {props.person.starRatingCount}{' '}

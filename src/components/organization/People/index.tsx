@@ -8,6 +8,8 @@ import AddPerson from './AddPerson';
 import SidebarContext from '../../../contexts/SidebarContext';
 import PeopleDeck from './PeopleDeck';
 import Skeleton from 'react-loading-skeleton';
+import getAuthenticatedUser from '../../../services/user/getAuthenticatedUser';
+import Role from '../../../enums/Role';
 
 export interface IPeopleProps { }
 
@@ -17,12 +19,16 @@ const People: React.FunctionComponent<IPeopleProps> = props => {
   const [searchPeople, setSearchPeople] = useState('');
   const sidebarContext = useContext(SidebarContext);
   const [refreshCount, setRefreshCount] = useState(0);
+  const [currentLoggedUser, setCurrentLoggedUser] = useState<IUser>();
 
   useEffect(() => {
     getAllPeople().then(people => {
       setPeople(people);
       setPeopleList(people);
     });
+
+    getAuthenticatedUser()
+      .then(setCurrentLoggedUser);
   }, [refreshCount]);
 
   const onPersonAdded = () => {
@@ -78,7 +84,7 @@ const People: React.FunctionComponent<IPeopleProps> = props => {
           />
         </InputGroup>
         <span className="float-right">
-          <Button className="text-nowrap" onClick={handleCreatePersonClick}>
+          <Button className="text-nowrap" onClick={handleCreatePersonClick} disabled={currentLoggedUser?.role !== Role.Super}>
             <FontAwesomeIcon icon={faPlus} className="mr-1" />
             Adicionar pessoa
           </Button>
