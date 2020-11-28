@@ -8,6 +8,9 @@ import TeamsDeck from './TeamsDeck';
 import SidebarContext from '../../../contexts/SidebarContext';
 import AddTeam from './AddTeam';
 import Skeleton from 'react-loading-skeleton';
+import { IUser } from '../../../interfaces/IUser';
+import Role from '../../../enums/Role';
+import getAuthenticatedUser from '../../../services/user/getAuthenticatedUser';
 
 export interface ITeamsProps { }
 
@@ -17,12 +20,16 @@ const Teams: React.FunctionComponent<ITeamsProps> = props => {
   const [searchTeam, setSearchTeam] = useState('');
   const sidebarContext = useContext(SidebarContext);
   const [refreshCount, setRefreshCount] = useState(0);
+  const [currentLoggedUser, setCurrentLoggedUser] = useState<IUser>();
 
   useEffect(() => {
     getAllTeams().then(res => {
       setTeams(res);
       setTeamList(res);
     });
+
+    getAuthenticatedUser()
+      .then(setCurrentLoggedUser);
   }, [refreshCount]);
 
   useMemo(() => {
@@ -67,7 +74,7 @@ const Teams: React.FunctionComponent<ITeamsProps> = props => {
           />
         </InputGroup>
         <span className="float-right">
-          <Button className="text-nowrap" onClick={handleCreateTeamClick}>
+          <Button className="text-nowrap" onClick={handleCreateTeamClick} disabled={currentLoggedUser?.role !== Role.Super}>
             <FontAwesomeIcon icon={faPlus} className="mr-1" />
             Adicionar equipe
           </Button>
