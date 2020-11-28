@@ -16,6 +16,8 @@ import { useToasts } from 'react-toast-notifications';
 import ITeam from '../../../../interfaces/ITeam';
 import { IUser } from '../../../../interfaces/IUser';
 import Skeleton from 'react-loading-skeleton';
+import getAuthenticatedUser from '../../../../services/user/getAuthenticatedUser';
+import Role from '../../../../enums/Role';
 
 export interface IAddTeamProps {
   onTeamAdded: () => void;
@@ -28,6 +30,7 @@ const AddTeam: React.FunctionComponent<IAddTeamProps> = props => {
   const { addToast } = useToasts();
   const [team, setTeam] = useState<ITeam>();
   const [teamPeople, setTeamPeople] = useState<IUser[]>();
+  const [currentLoggedUser, setCurrentLoggedUser] = useState<IUser>();
 
   const onSubmit = handleSubmit(data => {
     setIsAddingTeam(true);
@@ -65,6 +68,9 @@ const AddTeam: React.FunctionComponent<IAddTeamProps> = props => {
     if (props.team) {
       getData(props.team._id);
     }
+
+    getAuthenticatedUser()
+      .then(setCurrentLoggedUser);
   }, [props.team]);
 
   return (
@@ -98,7 +104,7 @@ const AddTeam: React.FunctionComponent<IAddTeamProps> = props => {
               )}
               {teamPeople.length > 0 &&
                 teamPeople.map(teamPerson => (
-                  <ListGroup.Item>
+                  <ListGroup.Item key={teamPerson._id}>
                     <div>{`${teamPerson.firstName} ${teamPerson.lastName}`}</div>
                     <div>
                       <small className="text-muted">
@@ -111,18 +117,19 @@ const AddTeam: React.FunctionComponent<IAddTeamProps> = props => {
           )}
         </div>
       )}
-      <Button type="submit" variant="success" block disabled={isAddingTeam}>
-        {!props.team && (
-          <>
-            <FontAwesomeIcon icon={faPlus} /> Adicionar
-          </>
-        )}
-        {props.team && (
-          <>
-            <FontAwesomeIcon icon={faPen} /> Editar
-          </>
-        )}
-      </Button>
+      {currentLoggedUser?.role === Role.Super &&
+        <Button type="submit" variant="success" block disabled={isAddingTeam}>
+          {!props.team && (
+            <>
+              <FontAwesomeIcon icon={faPlus} /> Adicionar
+            </>
+          )}
+          {props.team && (
+            <>
+              <FontAwesomeIcon icon={faPen} /> Editar
+            </>
+          )}
+        </Button>}
     </Form>
   );
 };
